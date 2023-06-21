@@ -18,7 +18,7 @@ export const Header: React.FC<{ title: string }> = ({ title }) => {
       </Heading>
       <Box as="hr" borderColor="gray.200" my="2" />
       <Button onClick={() => toggleColorMode()}>
-        {colorMode === "light" ? <SunIcon /> : <MoonIcon />}
+        {colorMode === "dark" ? <SunIcon /> : <MoonIcon />}
       </Button>
     </Flex>
   );
