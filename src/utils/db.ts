@@ -8,7 +8,7 @@ const pool = new Pool({
   host: process.env.HOST,
   database: process.env.DATABASE,
   password: process.env.PASSWORD,
-  port: process.env.PORT ? parseInt(process.env.PORT) : undefined,
+  port: parseInt(process.env.PORT!),
   max: 20, // maximum number of connections in the pool
   idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
   connectionTimeoutMillis: 2000, // how long to wait for a connection to be established
