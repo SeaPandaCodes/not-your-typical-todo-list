@@ -1,0 +1,32 @@
+[
+  {
+    "task": "Kitty TIME!",
+    "difficulty": "EASY",
+    "repeat": true
+  },
+  {
+    "task": "Fancy Coffee",
+    "difficulty": "EASY",
+    "repeat": false
+  },
+  {
+    "task": "New paint color",
+    "difficulty": "MEDIUM",
+    "repeat": true
+  },
+  {
+    "task": "New earphones",
+    "difficulty": "MEDIUM",
+    "repeat": false
+  },
+  {
+    "task": "Fancy Dinner",
+    "difficulty": "DIFFICULT",
+    "repeat": true
+  },
+  {
+    "task": "Playstation controller",
+    "difficulty": "DIFFICULT",
+    "repeat": true
+  }
+  ]
