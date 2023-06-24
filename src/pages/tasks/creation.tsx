@@ -1,5 +1,5 @@
 import { Header } from "@/components/Header";
-import { TaskCard } from "@/components/RowCard";
+import { TaskCard } from "@/components/TaskCard";
 import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Button,

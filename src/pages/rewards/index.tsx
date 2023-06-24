@@ -9,7 +9,7 @@ import {
   SimpleGrid,
   Switch,
 } from "@chakra-ui/react";
-import { TaskCard } from "@/components/RowCard";
+import { TaskCard } from "@/components/TaskCard";
 
 const Rewards: React.FC = () => {
   const filteredData = data.filter(({ type }) => type === "REWARD");

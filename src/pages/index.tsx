@@ -22,13 +22,13 @@ import {
   CircularProgress,
   CircularProgressLabel,
 } from "@chakra-ui/react";
-import { TaskCard } from "@/components/RowCard";
+import { TaskCard } from "@/components/TaskCard";
 import data from "./test/testData.json";
 import { useState } from "react";
 
 export default function Home() {
   const filteredData = data.filter(({ type }) => type === "TASK");
-  console.log(filteredData);
+  // console.log(filteredData);
   let index = 0;
   const { isOpen, onOpen, onClose } = useDisclosure();
 

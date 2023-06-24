@@ -28,7 +28,7 @@ export const TaskCard: React.FC<{
 }> = ({ task, checkbox, onTaskChecked }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <div>
+    <>
       <Card
         direction={{ base: "column", sm: "row" }}
         variant="elevated"
@@ -37,9 +37,12 @@ export const TaskCard: React.FC<{
         borderRadius={"20px"}
         bg="orange.200"
         color={"gray.600"}
-        // maxW="80%"
-        minW="80%"
-        width="100%"
+        // minW="80%"
+        // w="full"
+        // transition="all 250ms cubic-bezier(0.555, -0.435, 0.310, 1.470)"
+        transition="all 250ms ease-in-out"
+        _hover={{ transform: "scale(1.02)" }}
+        // _active={{ transform: "scale(0.95)" }}
       >
         {checkbox === true && (
           <Checkbox size="lg" colorScheme="green" onClick={onOpen}></Checkbox>
@@ -90,6 +93,6 @@ export const TaskCard: React.FC<{
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </div>
+    </>
   );
 };

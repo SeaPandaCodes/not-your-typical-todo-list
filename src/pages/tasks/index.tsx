@@ -1,5 +1,5 @@
 import { Header } from "@/components/Header";
-import { TaskCard } from "@/components/RowCard";
+import { TaskCard } from "@/components/TaskCard";
 import {
   Button,
   SimpleGrid,
@@ -7,6 +7,7 @@ import {
   Switch,
   FormControl,
   FormLabel,
+  Flex,
 } from "@chakra-ui/react";
 import React from "react";
 import data from "../test/testData.json";
@@ -14,7 +15,6 @@ import data from "../test/testData.json";
 const Tasks: React.FC = () => {
   const filteredData = data.filter(({ type }) => type === "TASK");
   console.log(filteredData);
-  let index = 0;
 
   return (
     <div style={{ height: "100vh" }}>
@@ -26,35 +26,27 @@ const Tasks: React.FC = () => {
         <Switch id="completed-tasks" />
       </FormControl>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          // margin: "20px",
-
-          width: "100%",
-          boxSizing: "border-box",
-          maxWidth: "100rem",
-          marginLeft: "auto",
-          marginRight: "auto",
-          paddingLeft: "1.875rem",
-          paddingRight: "1.875rem",
-        }}
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        w="full"
+        maxW="6xl"
+        mx="auto"
+        px={{ base: "4", md: "24" }}
+        transition="all 250ms ease-in-out"
       >
-        <SimpleGrid spacing={4} w={"80%"} minWidth={"150px"}>
-          {filteredData.map((task) => {
-            index++;
+        <SimpleGrid spacing={4} w="full">
+          {filteredData.map((task, index) => {
             return <TaskCard task={task.text} checkbox={true} key={index} />;
           })}
 
           {/* <TaskCard
-            task={`HHHHHHHHDASHDKJHASKJDHLKJAJSKDJKLSJDKLJSALKDJLKSJDKLJSLSADKJDLKAJWLKDJLKWAJDLKJAWLKDJLKWJA
-              SLKDJKLAJDLKJWfsddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddLAKJDKLJLKSAJLKDJSKLWHDNJKAWNFKLDNFKSNAs`}
+            task={`HHHHHHHHDA SHDKJHASKJDHLKJAJSKDJKLSJDKLJSALKDJLK SJDKLJSLSADKJDLKAJWLKDJLKWAJDLKJAWLKDJLKWJA
+              SLKD JKLAJDLKJWfsddddddddddddddd dddddddddddddddddddddddd dddddddddddddddddddddddLAK JDKLJLKSAJLKDJSKLWHDNJKAWNFKLDNFKSNAs`}
             checkbox={true}
           /> */}
         </SimpleGrid>
-      </div>
+      </Flex>
       <Link href="tasks/creation">
         <Button
           colorScheme="teal"
