@@ -45,7 +45,28 @@ export const appRouter = router({
       [userId]
     );
 
-    // console.log(rows, userId);
+    return rows;
+  }),
+  currentPoints: procedure.query(async ({ ctx }) => {
+    const userId = ctx.userId;
+
+    const { rows } = await pool.query<{
+      point_balance: number;
+    }>(
+      `
+      WITH task_points as
+      (SELECT SUM(points) as points
+           FROM tasks
+           WHERE user_id = $1
+           AND completed_at IS NOT NULL),
+       reward_points as
+       (SELECT SUM(points) as points
+         FROM redemptions
+         LEFT JOIN rewards r on redemptions.reward_id = r.id)
+        SELECT COALESCE(task_points.points - reward_points.points, 0) as point_balance FROM task_points, reward_points;
+    `,
+      [userId]
+    );
 
     return rows;
   }),
