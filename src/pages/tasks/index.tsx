@@ -8,14 +8,39 @@ import {
   FormControl,
   FormLabel,
   Flex,
+  Box,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import data from "../test/testData.json";
+import { trpc } from "@/utils/trpc";
 
 const Tasks: React.FC = () => {
   const filteredData = data.filter(({ type }) => type === "TASK");
-  console.log(filteredData);
+  // console.log(filteredData);
 
+  const taskList = trpc.tasks.useQuery();
+
+  function refetch() {
+    taskList.refetch();
+    console.log("fetch");
+  }
+
+  console.log(
+    "data",
+    "isFethc",
+    taskList.isFetching,
+    "isRefetch",
+    taskList.isRefetching,
+    "isErr",
+    taskList.isRefetchError
+  );
+
+  useEffect(() => {
+    console.log("USEEFFECT");
+  }, [taskList.isRefetching]);
+  // console.log("newTask", taskList.isRefetching);
+
+  // const rewardList = trpc.availableRewards.useQuery();
   return (
     <div style={{ height: "100vh" }}>
       <Header title="Tasks" />
@@ -35,10 +60,40 @@ const Tasks: React.FC = () => {
         px={{ base: "4", md: "24" }}
         transition="all 250ms ease-in-out"
       >
+        <Button onClick={refetch} />
         <SimpleGrid spacing={4} w="full">
-          {filteredData.map((task, index) => {
-            return <TaskCard task={task.text} checkbox={true} key={index} />;
-          })}
+          {taskList.isSuccess &&
+            taskList.isFetched &&
+            taskList.data.tasks.map((pointGroup) => {
+              console.log("UPDATEEEEEEEEEEEEEEEEEE");
+              return (
+                <>
+                  {pointGroup.tasks.map((task) => {
+                    return (
+                      <TaskCard
+                        task={task.name}
+                        checkbox={true}
+                        cardId={task.id}
+                        key={task.id}
+                        refetch={refetch}
+                      />
+                    );
+                  })}
+                </>
+              );
+            })}
+
+          {/* {filteredData.map((task, index) => {
+            console.log(taskList.data);
+            return (
+              <TaskCard
+                task={task.text}
+                checkbox={true}
+                key={index}
+                cardId="test"
+              />
+            );
+          })} */}
 
           {/* <TaskCard
             task={`HHHHHHHHDA SHDKJHASKJDHLKJAJSKDJKLSJDKLJSALKDJLK SJDKLJSLSADKJDLKAJWLKDJLKWAJDLKJAWLKDJLKWJA

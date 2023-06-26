@@ -19,14 +19,19 @@ import {
   Modal,
   Button,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
+import { trpc } from "@/utils/trpc";
 
 export const TaskCard: React.FC<{
   task: string;
   checkbox: boolean;
   onTaskChecked?: any;
-}> = ({ task, checkbox, onTaskChecked }) => {
+  cardId: string;
+  refetch?: any;
+}> = ({ task, checkbox, onTaskChecked, cardId, refetch }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const completeTask = trpc.completeTask.useMutation();
+
   return (
     <>
       <Card
@@ -45,7 +50,34 @@ export const TaskCard: React.FC<{
         // _active={{ transform: "scale(0.95)" }}
       >
         {checkbox === true && (
-          <Checkbox size="lg" colorScheme="green" onClick={onOpen}></Checkbox>
+          <Checkbox
+            size="lg"
+            colorScheme="green"
+            onChange={() => {
+              completeTask.mutate({
+                taskId: cardId,
+              });
+              console.log("click");
+
+              refetch();
+              onOpen;
+
+              if (completeTask.isError) {
+                console.log(completeTask.error.message);
+              }
+            }}
+            // onClick={() => {
+            //   completeTask.mutate({
+            //     taskId: cardId,
+            //   });
+            //   console.log("clciked");
+            //   onOpen;
+
+            //   if (completeTask.isError) {
+            //     console.log(completeTask.error.message);
+            //   }
+            // }}
+          ></Checkbox>
         )}
 
         {/* <CardHeader>

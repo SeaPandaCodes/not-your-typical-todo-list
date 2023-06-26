@@ -10,10 +10,14 @@ import {
   Switch,
 } from "@chakra-ui/react";
 import { TaskCard } from "@/components/TaskCard";
+import { trpc } from "@/utils/trpc";
 
 const Rewards: React.FC = () => {
   const filteredData = data.filter(({ type }) => type === "REWARD");
   let index = 0;
+
+  const rewardList = trpc.availableRewards.useQuery();
+  console.log(rewardList.isSuccess);
 
   return (
     <div style={{ height: "100vh" }}>
@@ -44,7 +48,15 @@ const Rewards: React.FC = () => {
         <SimpleGrid spacing={4} w={"80%"}>
           {filteredData.map((task) => {
             index++;
-            return <TaskCard task={task.text} checkbox={false} key={index} />;
+            return (
+              <TaskCard
+                task={task.text}
+                checkbox={false}
+                key={index}
+                cardId={""}
+                fetch={rewardList.refetch}
+              />
+            );
           })}
 
           {/* <TaskCard

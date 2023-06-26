@@ -25,11 +25,12 @@ import {
 import { TaskCard } from "@/components/TaskCard";
 import data from "./test/testData.json";
 import { useState } from "react";
+import { trpc } from "@/utils/trpc";
 
 export default function Home() {
   const filteredData = data.filter(({ type }) => type === "TASK");
-  // console.log(filteredData);
-  let index = 0;
+  const taskList = trpc.tasks.useQuery();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -91,10 +92,23 @@ export default function Home() {
           }}
         >
           <SimpleGrid spacing={4} w={"80%"} minWidth={"150px"}>
-            {filteredData.map((task) => {
-              index++;
-              return <TaskCard task={task.text} checkbox={true} key={index} />;
-            })}
+            {taskList.isSuccess &&
+              taskList.data.tasks.map((pointGroup) => {
+                return (
+                  <>
+                    {pointGroup.tasks.map((task) => {
+                      return (
+                        <TaskCard
+                          task={task.name}
+                          checkbox={true}
+                          cardId={task.id}
+                          key={task.id}
+                        />
+                      );
+                    })}
+                  </>
+                );
+              })}
 
             {/* <TaskCard
             task={`HHHHHHHHDASHDKJHASKJDHLKJAJSKDJKLSJDKLJSALKDJLKSJDKLJSLSADKJDLKAJWLKDJLKWAJDLKJAWLKDJLKWJA

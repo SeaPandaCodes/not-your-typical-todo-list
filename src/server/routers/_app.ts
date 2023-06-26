@@ -157,6 +157,8 @@ export const appRouter = router({
     .mutation(async ({ ctx, input }) => {
       const user_id = ctx.userId;
 
+      console.log(input.taskId);
+
       await pool.query(
         `
     UPDATE tasks SET completed_at = $1 WHERE id = $2 AND user_id = $3
