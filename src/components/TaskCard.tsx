@@ -32,6 +32,9 @@ export const TaskCard: React.FC<{
   const { isOpen, onOpen, onClose } = useDisclosure();
   const completeTask = trpc.completeTask.useMutation();
 
+  const deleteReward = trpc.deleteReward.useMutation();
+  const deleteTask = trpc.deleteTask.useMutation();
+
   return (
     <>
       <Card
@@ -96,6 +99,15 @@ export const TaskCard: React.FC<{
             colorScheme="teal"
             aria-label="Send email"
             icon={<DeleteIcon />}
+            onClick={() => {
+              if (checkbox !== true) {
+                deleteReward.mutate({ rewardId: cardId });
+                refetch();
+              } else {
+                deleteTask.mutate({ taskId: cardId });
+                refetch();
+              }
+            }}
           />
         </CardFooter>
       </Card>

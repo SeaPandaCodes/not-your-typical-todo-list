@@ -30,8 +30,17 @@ import { trpc } from "@/utils/trpc";
 export default function Home() {
   const filteredData = data.filter(({ type }) => type === "TASK");
   const taskList = trpc.tasks.useQuery();
+  const currentPoints = trpc.currentPoints.useQuery();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  function refetch() {
+    taskList.refetch();
+    currentPoints.refetch();
+    console.log("fetch");
+  }
+
+  console.log(currentPoints.data);
 
   return (
     <Box h="100vh" flex={"column"}>
@@ -43,6 +52,10 @@ export default function Home() {
             alt="Fox"
           />
         </Flex>
+        {currentPoints.isSuccess && (
+          <Box color="yellow.200">{currentPoints.data.point_balance}</Box>
+        )}
+
         <CircularProgress value={40} color="green.400" size="180px">
           <CircularProgressLabel>
             {/* <div
@@ -103,6 +116,7 @@ export default function Home() {
                           checkbox={true}
                           cardId={task.id}
                           key={task.id}
+                          refetch={refetch}
                         />
                       );
                     })}

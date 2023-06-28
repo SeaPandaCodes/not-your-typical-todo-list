@@ -4,17 +4,6 @@ import { pool } from "@/utils/db";
 import crypto from "crypto";
 
 export const appRouter = router({
-  hello: procedure
-    .input(
-      z.object({
-        text: z.string().min(10),
-      })
-    )
-    .query((opts) => {
-      return {
-        greeting: `hello ${opts.input.text}`,
-      };
-    }),
   tasks: procedure.query(async ({ ctx }) => {
     const userId = ctx.userId;
 
@@ -53,7 +42,7 @@ export const appRouter = router({
         WHERE user_id = $1
         GROUP BY reward_id), available_rewards as (
             SELECT * FROM rewards LEFT JOIN reward_redemptions r on rewards.id = r.reward_id
-            WHERE user_id = $1 AND max_redemptions IS NULL OR max_redemptions < redemptions
+            WHERE deleted = false AND user_id = $1 AND max_redemptions IS NULL OR max_redemptions < redemptions
         ), available_reward_objs as (
             SELECT points, jsonb_build_object('id', id, 'name', name) as reward_obj FROM available_rewards
     ) SELECT points, jsonb_agg(reward_obj) as rewards FROM available_reward_objs GROUP BY points ORDER BY points
@@ -84,7 +73,7 @@ export const appRouter = router({
       [userId]
     );
 
-    return rows;
+    return rows[0];
   }),
   addTask: procedure
     .input(
@@ -111,7 +100,7 @@ export const appRouter = router({
     .input(
       z.object({
         name: z.string(),
-        maxRedemptions: z.number(),
+        maxRedemptions: z.number().nullable(),
         points: z.number(),
       })
     )

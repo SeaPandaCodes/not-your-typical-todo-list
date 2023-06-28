@@ -13,11 +13,12 @@ import { TaskCard } from "@/components/TaskCard";
 import { trpc } from "@/utils/trpc";
 
 const Rewards: React.FC = () => {
-  const filteredData = data.filter(({ type }) => type === "REWARD");
-  let index = 0;
-
   const rewardList = trpc.availableRewards.useQuery();
-  console.log(rewardList.isSuccess);
+
+  function refetch() {
+    rewardList.refetch();
+    console.log("fetch");
+  }
 
   return (
     <div style={{ height: "100vh" }}>
@@ -46,18 +47,25 @@ const Rewards: React.FC = () => {
         }}
       >
         <SimpleGrid spacing={4} w={"80%"}>
-          {filteredData.map((task) => {
-            index++;
-            return (
-              <TaskCard
-                task={task.text}
-                checkbox={false}
-                key={index}
-                cardId={""}
-                fetch={rewardList.refetch}
-              />
-            );
-          })}
+          {rewardList.isSuccess &&
+            rewardList.isFetched &&
+            rewardList.data.map((rewardGroup) => {
+              return (
+                <>
+                  {rewardGroup.rewards.map((reward) => {
+                    return (
+                      <TaskCard
+                        task={reward.name}
+                        checkbox={false}
+                        key={reward.id}
+                        cardId={reward.id}
+                        refetch={refetch}
+                      />
+                    );
+                  })}
+                </>
+              );
+            })}
 
           {/* <TaskCard
             task={`HHHHHHHHDASHDKJHASKJDHLKJAJSKDJKLSJDKLJSALKDJLKSJDKLJSLSADKJDLKAJWLKDJLKWAJDLKJAWLKDJLKWJA
