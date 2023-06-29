@@ -72,7 +72,7 @@ const Tasks: React.FC = () => {
                     return (
                       <TaskCard
                         task={task.name}
-                        checkbox={true}
+                        type={"task"}
                         cardId={task.id}
                         key={task.id}
                         refetch={refetch}
@@ -82,24 +82,6 @@ const Tasks: React.FC = () => {
                 </>
               );
             })}
-
-          {/* {filteredData.map((task, index) => {
-            console.log(taskList.data);
-            return (
-              <TaskCard
-                task={task.text}
-                checkbox={true}
-                key={index}
-                cardId="test"
-              />
-            );
-          })} */}
-
-          {/* <TaskCard
-            task={`HHHHHHHHDA SHDKJHASKJDHLKJAJSKDJKLSJDKLJSALKDJLK SJDKLJSLSADKJDLKAJWLKDJLKWAJDLKJAWLKDJLKWJA
-              SLKD JKLAJDLKJWfsddddddddddddddd dddddddddddddddddddddddd dddddddddddddddddddddddLAK JDKLJLKSAJLKDJSKLWHDNJKAWNFKLDNFKSNAs`}
-            checkbox={true}
-          /> */}
         </SimpleGrid>
       </Flex>
       <Link href="tasks/creation">

@@ -75,38 +75,32 @@ const RewardCreation: React.FC = () => {
   const addReward = trpc.addReward.useMutation();
 
   const onSubmit = handleSubmit((values) => {
-    return new Promise((resolve) => {
-      addReward.mutate({
-        name: values.name,
-        points: values.points,
-        maxRedemptions: values.maxRedemptions,
-      });
-
-      console.log(addReward);
-
-      setTimeout(() => {
-        if (addReward.isLoading !== true && addReward.isSuccess) {
-          console.log("SUCCESS");
-          reset({
-            name: "",
-            points: -1,
-            maxRedemptions: null,
-          });
-          setChecked(false);
-          resolve(null);
-        } else {
-          alert("Submission Failed");
-          resolve(null);
-        }
-      }, 1000);
-
-      // resolve(null);
-
-      // setTimeout(() => {
-      //   alert(JSON.stringify(values, null, 2));
-      //   resolve(null);
-      // }, 1000);
+    addReward.mutate({
+      name: values.name,
+      points: values.points,
+      maxRedemptions: values.maxRedemptions,
     });
+
+    console.log(addReward);
+
+    if (addReward.isLoading !== true && addReward.isSuccess) {
+      console.log("SUCCESS");
+      reset({
+        name: "",
+        points: -1,
+        maxRedemptions: null,
+      });
+      setChecked(false);
+    } else {
+      alert("Submission Failed");
+    }
+
+    // resolve(null);
+
+    // setTimeout(() => {
+    //   alert(JSON.stringify(values, null, 2));
+    //   resolve(null);
+    // }, 1000);
   });
 
   return (
@@ -139,7 +133,7 @@ const RewardCreation: React.FC = () => {
                   </option>
                   <option value={10}>Easy: 10 points</option>
                   <option value={30}>Medium: 30 points</option>
-                  <option value={50}>Difficult: 50 points</option>
+                  <option value={60}>Difficult: 60 points</option>
                 </Select>
                 <FormErrorMessage>{errors.points?.message}</FormErrorMessage>
               </FormControl>

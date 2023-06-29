@@ -20,21 +20,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "@/utils/trpc";
 
 const TaskCreation: React.FC = () => {
-  const schema = z.object({
+  const schema = z.strictObject({
     name: z.string().min(1, { message: "Required" }),
-    points: z.preprocess(
-      (a) => parseInt(a as string) || 1,
-      z.number().positive().max(100).min(10, { message: "Required" })
-    ),
-    // repeatTask: z.boolean(),
+    points: z
+      .string()
+      .transform((s) => parseInt(s))
+      .pipe(z.number().positive().max(100).min(10, { message: "Required" })),
   });
-
-  const requiredSchema = schema.required();
-
-  type TaskData = {
-    name: string;
-    points: number;
-  };
 
   const {
     formState: { errors, isSubmitting },
@@ -43,58 +35,27 @@ const TaskCreation: React.FC = () => {
     reset,
     formState,
     formState: { isSubmitSuccessful },
-  } = useForm<TaskData>({
+  } = useForm<z.input<typeof schema>>({
     mode: "onBlur",
-    resolver: zodResolver(requiredSchema),
+    defaultValues: {
+      name: "",
+      points: "",
+    },
+    resolver: zodResolver(schema),
   });
 
   const addTask = trpc.addTask.useMutation();
 
-  // const onSubmit = handleSubmit(async (values) => {
-  //   return new Promise((resolve) => {
-  //     await addTask.mutateAsync({ name: values.name, points: values.points });
+  const onSubmit = handleSubmit(async (values) => {
+    const parsed = schema.parse(values);
 
-  //     addTask.isSuccess ? resolve(null) : console.log("fail");
-  //     if (addTask.isSuccess) {
-  //       console.log("HURAH!");
-  //       alert(JSON.stringify(values, null, 2));
-  //     }
-  //     // resolve(null);
-  //     // setTimeout(() => {
-  //     //   alert(JSON.stringify(values, null, 2));
-  //     //   resolve(null);
-  //     // }, 1000);
-  //   });
-  // });
-
-  const onSubmit = handleSubmit((values) => {
-    return new Promise((resolve) => {
-      addTask.mutateAsync({ name: values.name, points: values.points });
-
-      setTimeout(() => {
-        if (addTask.isSuccess) {
-          console.log("HURAH!");
-
-          reset({
-            name: undefined,
-            points: undefined,
-          });
-          resolve(null);
-        } else {
-          alert("Submission Failed");
-        }
-      }, 1000);
-    });
+    try {
+      await addTask.mutateAsync(parsed);
+      reset();
+    } catch {
+      alert("Submission Failed");
+    }
   });
-
-  // useEffect(() => {
-  //   if (formState.isSubmitSuccessful) {
-  //     reset({
-  //       name: undefined,
-  //       points: undefined,
-  //     });
-  //   }
-  // }, [formState, reset]);
 
   return (
     <Box>
@@ -112,14 +73,11 @@ const TaskCreation: React.FC = () => {
                 <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
               </FormControl>
               <FormControl id="points" isInvalid={!!errors.points}>
-                <FormLabel>Points</FormLabel>
-                <Select {...register("points")} defaultValue={""}>
-                  <option hidden disabled value="">
-                    Select Points
-                  </option>
-                  <option value={10}>Easy: 10 points</option>
-                  <option value={30}>Medium: 30 points</option>
-                  <option value={50}>Difficult: 50 points</option>
+                <FormLabel>Select Points</FormLabel>
+                <Select {...register("points")}>
+                  <option value="10">Easy: 10 points</option>
+                  <option value="30">Medium: 30 points</option>
+                  <option value="60">Difficult: 60 points</option>
                 </Select>
                 <FormErrorMessage>{errors.points?.message}</FormErrorMessage>
               </FormControl>

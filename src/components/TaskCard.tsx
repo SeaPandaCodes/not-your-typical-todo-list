@@ -24,12 +24,14 @@ import { trpc } from "@/utils/trpc";
 
 export const TaskCard: React.FC<{
   task: string;
-  checkbox: boolean;
+  type: "task" | "reward";
   onTaskChecked?: any;
   cardId: string;
   refetch?: any;
-}> = ({ task, checkbox, onTaskChecked, cardId, refetch }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+}> = ({ task, type, onTaskChecked, cardId, refetch }) => {
+  // const { isOpen, onOpen, onClose } = useDisclosure();
+  const utils = trpc.useContext();
+
   const completeTask = trpc.completeTask.useMutation();
 
   const deleteReward = trpc.deleteReward.useMutation();
@@ -52,21 +54,19 @@ export const TaskCard: React.FC<{
         _hover={{ transform: "scale(1.02)" }}
         // _active={{ transform: "scale(0.95)" }}
       >
-        {checkbox === true && (
+        {type === "task" && (
           <Checkbox
             size="lg"
             colorScheme="green"
-            onChange={() => {
-              completeTask.mutate({
-                taskId: cardId,
-              });
-              console.log("click");
+            onChange={async () => {
+              try {
+                await completeTask.mutateAsync({
+                  taskId: cardId,
+                });
 
-              refetch();
-              onOpen;
-
-              if (completeTask.isError) {
-                console.log(completeTask.error.message);
+                refetch();
+              } catch (e) {
+                console.log(e);
               }
             }}
             // onClick={() => {
@@ -99,19 +99,20 @@ export const TaskCard: React.FC<{
             colorScheme="teal"
             aria-label="Send email"
             icon={<DeleteIcon />}
-            onClick={() => {
-              if (checkbox !== true) {
-                deleteReward.mutate({ rewardId: cardId });
-                refetch();
-              } else {
-                deleteTask.mutate({ taskId: cardId });
-                refetch();
+            isLoading={deleteReward.isLoading || deleteTask.isLoading}
+            onClick={async () => {
+              if (type === "reward") {
+                await deleteReward.mutateAsync({ rewardId: cardId });
+                await utils.availableRewards.fetch();
+                return;
               }
+              await deleteTask.mutateAsync({ taskId: cardId });
+              await utils.tasks.fetch();
             }}
           />
         </CardFooter>
       </Card>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      {/* <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Modal Title</ModalHeader>
@@ -136,7 +137,7 @@ export const TaskCard: React.FC<{
             <Button variant="ghost">Secondary Action</Button>
           </ModalFooter>
         </ModalContent>
-      </Modal>
+      </Modal> */}
     </>
   );
 };
