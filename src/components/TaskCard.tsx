@@ -3,33 +3,19 @@ import {
   Card,
   CardBody,
   CardFooter,
-  CardHeader,
   Checkbox,
   Flex,
-  Heading,
   IconButton,
   Text,
-  useDisclosure,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Modal,
-  Button,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React from "react";
 import { trpc } from "@/utils/trpc";
 
 export const TaskCard: React.FC<{
   task: string;
   type: "task" | "reward";
-  onTaskChecked?: any;
   cardId: string;
-  refetch?: any;
-}> = ({ task, type, onTaskChecked, cardId, refetch }) => {
-  // const { isOpen, onOpen, onClose } = useDisclosure();
+}> = ({ task, type, cardId }) => {
   const utils = trpc.useContext();
 
   const completeTask = trpc.completeTask.useMutation();
@@ -59,35 +45,13 @@ export const TaskCard: React.FC<{
             size="lg"
             colorScheme="green"
             onChange={async () => {
-              try {
-                await completeTask.mutateAsync({
-                  taskId: cardId,
-                });
-
-                refetch();
-              } catch (e) {
-                console.log(e);
-              }
+              await completeTask.mutateAsync({ taskId: cardId });
+              await utils.tasks.fetch();
+              await utils.currentPoints.fetch();
+              return;
             }}
-            // onClick={() => {
-            //   completeTask.mutate({
-            //     taskId: cardId,
-            //   });
-            //   console.log("clciked");
-            //   onOpen;
-
-            //   if (completeTask.isError) {
-            //     console.log(completeTask.error.message);
-            //   }
-            // }}
           ></Checkbox>
         )}
-
-        {/* <CardHeader>
-        <Heading size="md" flexWrap="wrap">
-          {task}
-        </Heading>
-      </CardHeader> */}
         <CardBody>
           <Flex wrap={"wrap"}>
             <Text>{task}</Text>
@@ -112,32 +76,6 @@ export const TaskCard: React.FC<{
           />
         </CardFooter>
       </Card>
-      {/* <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            Sit nulla est ex deserunt exercitation anim occaecat. Nostrud
-            ullamco deserunt aute id consequat veniam incididunt duis in sint
-            irure nisi. Mollit officia cillum Lorem ullamco minim nostrud elit
-            officia tempor esse quis. Sunt ad dolore quis aute consequat. Magna
-            exercitation reprehenderit magna aute tempor cupidatat consequat
-            elit dolor adipisicing. Mollit dolor eiusmod sunt ex incididunt
-            cillum quis. Velit duis sit officia eiusmod Lorem aliqua enim
-            laboris do dolor eiusmod. Et mollit incididunt nisi consectetur esse
-            laborum eiusmod pariatur proident Lorem eiusmod et. Culpa deserunt
-            nostrud ad veniam.
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant="ghost">Secondary Action</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal> */}
     </>
   );
 };

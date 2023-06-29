@@ -36,23 +36,6 @@ export default function Home() {
   const utils = trpc.useContext();
   const taskList = trpc.tasks.useQuery();
   const currentPoints = trpc.currentPoints.useQuery();
-  const availableRewards = trpc.availableRewards.useQuery();
-
-  function refetch() {
-    taskList.refetch();
-    currentPoints.refetch();
-    console.log("fetch");
-  }
-
-  let reward: number = 0;
-
-  let rewardList = availableRewards.data?.filter(
-    ({ points }) => points === reward
-  );
-
-  if (rewardList && rewardList?.length > 0) {
-    console.log(rewardList[0]?.rewards);
-  }
 
   const [selectedRewardTier, setSelectedRewardTier] = useState<number | null>(
     null
@@ -193,7 +176,7 @@ export default function Home() {
             </Flex>
           )}
           <SimpleGrid spacing={4} w="full">
-            {taskList.isSuccess &&
+            {taskList.data !== undefined &&
               taskList.data.tasks.map((pointGroup) => {
                 return (
                   <>
@@ -204,7 +187,6 @@ export default function Home() {
                           type={"task"}
                           cardId={task.id}
                           key={task.id}
-                          refetch={refetch}
                         />
                       );
                     })}

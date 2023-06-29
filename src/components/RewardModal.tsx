@@ -47,7 +47,7 @@ export const RewardModal: React.FC<{
     const index = Math.round(Math.random() * (availableRewards.length - 1));
 
     return [availableRewards[index], availableRewards.length] as const;
-  }, [rewardTiers.data, discarded]);
+  }, [selectedRewardTier, rewardTiers.data, discarded]);
 
   if (randomReward === null) {
     return null;

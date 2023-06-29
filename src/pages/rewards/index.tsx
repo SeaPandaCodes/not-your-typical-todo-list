@@ -1,5 +1,4 @@
 import React from "react";
-import data from "../test/testData.json";
 import { Header } from "@/components/Header";
 import {
   Button,
@@ -14,11 +13,6 @@ import { trpc } from "@/utils/trpc";
 
 const Rewards: React.FC = () => {
   const rewardList = trpc.availableRewards.useQuery();
-
-  function refetch() {
-    rewardList.refetch();
-    console.log("fetch");
-  }
 
   return (
     <div style={{ height: "100vh" }}>
@@ -47,8 +41,7 @@ const Rewards: React.FC = () => {
         }}
       >
         <SimpleGrid spacing={4} w={"80%"}>
-          {rewardList.isSuccess &&
-            rewardList.isFetched &&
+          {rewardList.data !== undefined &&
             rewardList.data.map((rewardGroup) => {
               return (
                 <>
@@ -56,10 +49,9 @@ const Rewards: React.FC = () => {
                     return (
                       <TaskCard
                         task={reward.name}
-                        checkbox={false}
+                        type={"reward"}
                         key={reward.id}
                         cardId={reward.id}
-                        refetch={refetch}
                       />
                     );
                   })}
