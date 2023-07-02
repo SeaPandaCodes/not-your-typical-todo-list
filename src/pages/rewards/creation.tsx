@@ -1,6 +1,3 @@
-import { Header } from "@/components/Header";
-import { TaskCard } from "@/components/TaskCard";
-import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -24,83 +21,56 @@ import { trpc } from "@/utils/trpc";
 const RewardCreation: React.FC = () => {
   const [checked, setChecked] = useState<boolean>(false);
 
-  const schema = z.object({
+  const schema = z.strictObject({
     name: z.string().min(1, { message: "Required" }),
-    points: z.preprocess(
-      (a) => parseInt(a as string) || 1,
-      z.number().positive().max(100).min(10, { message: "Required" })
-    ),
-    maxRedemptions: z.preprocess(
-      (a) => parseInt(a as string) || null,
-      z.number().nullable()
-    ),
-
-    // repeatTask: z.boolean(),
+    points: z
+      .string()
+      .transform((s) => (s !== null ? parseInt(s) : s))
+      .refine((s) => !Number.isNaN(s), { message: "Required" })
+      .pipe(z.number().positive().max(100).min(10, { message: "Required" })),
+    maxRedemptions: z
+      .string()
+      .nullable()
+      .transform((s) => parseInt(s as string) || null)
+      .pipe(
+        z
+          .number()
+          .positive()
+          .max(10000)
+          .min(1, { message: "Required" })
+          .nullable()
+      ),
   });
-
-  const checkedSchema = z.object({
-    name: z.string().min(1, { message: "Required" }),
-    points: z.preprocess(
-      (a) => parseInt(a as string) || 1,
-      z.number().positive().max(100).min(10, { message: "Required" })
-    ),
-    maxRedemptions: z.preprocess(
-      (a) => parseInt(a as string) || null,
-      z.number()
-    ),
-
-    // repeatTask: z.boolean(),
-  });
-
-  let requiredSchema: any = schema.required();
-
-  useEffect(() => {}, [checked]);
-
-  type RewardData = {
-    name: string;
-    points: number;
-    maxRedemptions: number | null;
-  };
 
   const {
     formState: { errors, isSubmitting },
     handleSubmit,
     register,
     reset,
-  } = useForm<RewardData>({
+  } = useForm<z.input<typeof schema>>({
     mode: "onBlur",
-    resolver: zodResolver(requiredSchema),
+    defaultValues: {
+      name: "",
+      points: "",
+      maxRedemptions: null,
+    },
+    resolver: zodResolver(schema),
   });
 
   const addReward = trpc.addReward.useMutation();
 
-  const onSubmit = handleSubmit((values) => {
-    addReward.mutate({
-      name: values.name,
-      points: values.points,
-      maxRedemptions: values.maxRedemptions,
-    });
-
-    console.log(addReward);
-
-    if (addReward.isLoading !== true && addReward.isSuccess) {
-      console.log("SUCCESS");
-      reset({
-        name: "",
-        points: -1,
-        maxRedemptions: null,
-      });
+  const onSubmit = handleSubmit(async (values) => {
+    values.points = values.points.toString();
+    values.maxRedemptions =
+      values.maxRedemptions === null ? null : values.maxRedemptions.toString();
+    const parsed = schema.parse(values);
+    try {
+      await addReward.mutateAsync(parsed);
+      reset();
       setChecked(false);
-    } else {
+    } catch {
       alert("Submission Failed");
     }
-
-    // resolve(null);
-
-    // setTimeout(() => {
-    //   alert(JSON.stringify(values, null, 2));
-    //   resolve(null);
-    // }, 1000);
   });
 
   return (
@@ -124,16 +94,14 @@ const RewardCreation: React.FC = () => {
                 <FormLabel>Points</FormLabel>
                 <Select
                   {...register("points")}
-                  defaultValue={-1}
+                  // defaultValue={'1'}
                   outline="10px"
                   borderLeft={errors.points ? "solid 14px" : undefined}
+                  placeholder="Select Points"
                 >
-                  <option hidden disabled value={-1}>
-                    Select Points
-                  </option>
-                  <option value={10}>Easy: 10 points</option>
-                  <option value={30}>Medium: 30 points</option>
-                  <option value={60}>Difficult: 60 points</option>
+                  <option value="10">Easy: 10 points</option>
+                  <option value="30">Medium: 30 points</option>
+                  <option value="60">Difficult: 60 points</option>
                 </Select>
                 <FormErrorMessage>{errors.points?.message}</FormErrorMessage>
               </FormControl>

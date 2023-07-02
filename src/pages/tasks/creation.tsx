@@ -25,6 +25,7 @@ const TaskCreation: React.FC = () => {
     points: z
       .string()
       .transform((s) => parseInt(s))
+      .refine((s) => !Number.isNaN(s), { message: "Required" })
       .pipe(z.number().positive().max(100).min(10, { message: "Required" })),
   });
 
@@ -47,8 +48,8 @@ const TaskCreation: React.FC = () => {
   const addTask = trpc.addTask.useMutation();
 
   const onSubmit = handleSubmit(async (values) => {
+    values.points = values.points.toString();
     const parsed = schema.parse(values);
-
     try {
       await addTask.mutateAsync(parsed);
       reset();
@@ -74,7 +75,11 @@ const TaskCreation: React.FC = () => {
               </FormControl>
               <FormControl id="points" isInvalid={!!errors.points}>
                 <FormLabel>Select Points</FormLabel>
-                <Select {...register("points")}>
+                <Select
+                  // defaultValue={"1"}
+                  {...register("points")}
+                  placeholder="Select Points"
+                >
                   <option value="10">Easy: 10 points</option>
                   <option value="30">Medium: 30 points</option>
                   <option value="60">Difficult: 60 points</option>
