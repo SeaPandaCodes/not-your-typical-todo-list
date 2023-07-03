@@ -5,6 +5,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Grid,
+  Heading,
   Input,
   Select,
   Stack,
@@ -59,14 +60,24 @@ const TaskCreation: React.FC = () => {
     <Box>
       <Grid minH="100vh" p={3}>
         <VStack spacing={8}>
+          <Heading>Add Task</Heading>
           <form onSubmit={onSubmit}>
-            <Stack spacing="6">
+            <Stack
+              spacing="10"
+              transition="all 250ms ease-in-out"
+              minW={{ base: "4", md: "lg", lg: "2xl" }}
+              boxShadow="0 1px 3px 2px var(--chakra-colors-purple-400)"
+              p="6"
+              rounded="md"
+              // bg="white"
+            >
               <FormControl id="name" isInvalid={!!errors.name}>
                 <FormLabel>Task Name</FormLabel>
                 <Input
                   autoFocus={true}
                   {...register("name")}
                   autoComplete="off"
+                  borderLeft={errors.name ? "solid 14px" : undefined}
                 />
                 <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
               </FormControl>
@@ -76,6 +87,7 @@ const TaskCreation: React.FC = () => {
                   // defaultValue={"1"}
                   {...register("points")}
                   placeholder="Select Points"
+                  borderLeft={errors.points ? "solid 14px" : undefined}
                 >
                   <option value="10">Easy: 10 points</option>
                   <option value="30">Medium: 30 points</option>
@@ -85,7 +97,7 @@ const TaskCreation: React.FC = () => {
               </FormControl>
               <Button
                 type="submit"
-                colorScheme="blue"
+                colorScheme="purple"
                 size="lg"
                 fontSize="md"
                 isLoading={isSubmitting}

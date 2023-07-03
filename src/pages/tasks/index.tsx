@@ -16,7 +16,7 @@ const Tasks: React.FC = () => {
   const taskList = trpc.tasks.useQuery();
 
   return (
-    <Box h="full">
+    <Box h="full" mb="20">
       <Flex
         justifyContent="center"
         alignItems="center"

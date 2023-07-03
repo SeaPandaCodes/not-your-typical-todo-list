@@ -31,19 +31,24 @@ export const TaskCard: React.FC<{
         align="center"
         padding="0 30px 0  30px"
         borderRadius={"20px"}
-        bg="orange.200"
-        color={"gray.600"}
+        // bg="orange.200"
+        // color={"gray.600"}
         // minW="80%"
         // w="full"
         // transition="all 250ms cubic-bezier(0.555, -0.435, 0.310, 1.470)"
         transition="all 250ms ease-in-out"
-        _hover={{ transform: "scale(1.02)" }}
+        _hover={{
+          transform: "scale(1.02)",
+          boxShadow: "0 1px 4px 4px var(--chakra-colors-purple-400)",
+        }}
+        boxShadow="0 1px 3px 2px var(--chakra-colors-purple-400)"
         // _active={{ transform: "scale(0.95)" }}
       >
         {type === "task" && (
           <Checkbox
             size="lg"
-            colorScheme="green"
+            colorScheme="purple"
+            borderColor="purple.500"
             onChange={async () => {
               await completeTask.mutateAsync({ taskId: cardId });
               await utils.tasks.fetch();

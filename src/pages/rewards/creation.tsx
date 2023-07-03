@@ -11,6 +11,7 @@ import {
   VStack,
   Checkbox,
   Flex,
+  Heading,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -77,6 +78,7 @@ const RewardCreation: React.FC = () => {
     <Box>
       <Grid minH="100vh" p={3}>
         <VStack spacing={8}>
+          <Heading>Add Reward</Heading>
           <form onSubmit={onSubmit}>
             <Stack spacing="6">
               <FormControl id="name" isInvalid={!!errors.name}>

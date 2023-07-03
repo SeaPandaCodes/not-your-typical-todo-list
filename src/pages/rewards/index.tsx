@@ -5,6 +5,7 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  Heading,
   Link,
   SimpleGrid,
   Switch,
@@ -16,7 +17,7 @@ const Rewards: React.FC = () => {
   const rewardList = trpc.availableRewards.useQuery();
 
   return (
-    <Box h="full">
+    <Box h="full" mb="20">
       <Flex
         justifyContent="center"
         alignItems="center"
@@ -30,7 +31,27 @@ const Rewards: React.FC = () => {
           {rewardList.data !== undefined &&
             rewardList.data.map((rewardGroup) => {
               return (
-                <React.Fragment key={rewardGroup.points}>
+                <Flex
+                  key={rewardGroup.points}
+                  flexDir="column"
+                  rowGap={5}
+                  m={5}
+                  border="4px"
+                  p="8"
+                  borderColor="purple.800"
+                  borderRadius="xl"
+                >
+                  <Heading
+                    mt="-50px"
+                    mb={2}
+                    fontSize="2xl"
+                    bg="var(--chakra-colors-chakra-body-bg)"
+                    mx="5"
+                    px="5"
+                    w="fit-content"
+                  >
+                    {rewardGroup.points} Point Rewards
+                  </Heading>
                   {rewardGroup.rewards.map((reward) => {
                     return (
                       <TaskCard
@@ -41,7 +62,7 @@ const Rewards: React.FC = () => {
                       />
                     );
                   })}
-                </React.Fragment>
+                </Flex>
               );
             })}
 
