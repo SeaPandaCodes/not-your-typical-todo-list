@@ -1,4 +1,3 @@
-import { Header } from "@/components/Header";
 import { TaskCard } from "@/components/TaskCard";
 import {
   Button,
@@ -8,6 +7,7 @@ import {
   FormControl,
   FormLabel,
   Flex,
+  Box,
 } from "@chakra-ui/react";
 import React from "react";
 import { trpc } from "@/utils/trpc";
@@ -16,15 +16,7 @@ const Tasks: React.FC = () => {
   const taskList = trpc.tasks.useQuery();
 
   return (
-    <div style={{ height: "100vh" }}>
-      <Header title="Tasks" />
-      <FormControl display="flex" alignItems="center">
-        <FormLabel htmlFor="email-alerts" mb="0">
-          View Completed Tasks
-        </FormLabel>
-        <Switch id="completed-tasks" />
-      </FormControl>
-
+    <Box h="full">
       <Flex
         justifyContent="center"
         alignItems="center"
@@ -38,7 +30,7 @@ const Tasks: React.FC = () => {
           {taskList.data !== undefined &&
             taskList.data.tasks.map((pointGroup) => {
               return (
-                <>
+                <React.Fragment key={pointGroup.points}>
                   {pointGroup.tasks.map((task) => {
                     return (
                       <TaskCard
@@ -49,7 +41,7 @@ const Tasks: React.FC = () => {
                       />
                     );
                   })}
-                </>
+                </React.Fragment>
               );
             })}
         </SimpleGrid>
@@ -65,7 +57,7 @@ const Tasks: React.FC = () => {
           Add Task
         </Button>
       </Link>
-    </div>
+    </Box>
   );
 };
 

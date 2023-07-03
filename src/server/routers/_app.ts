@@ -193,6 +193,11 @@ export const appRouter = router({
 
       return;
     }),
+  getSessionId: procedure.query(async ({ ctx }) => {
+    const user_id = ctx.userId;
+
+    return user_id;
+  }),
 });
 
 export type AppRouter = typeof appRouter;

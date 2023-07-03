@@ -1,5 +1,3 @@
-import styles from "@/styles/Home.module.css";
-import { Header } from "@/components/Header";
 import {
   Box,
   Flex,
@@ -31,6 +29,7 @@ import { trpc } from "@/utils/trpc";
 import { TriangleDownIcon } from "@chakra-ui/icons";
 import { RewardModal } from "@/components/RewardModal";
 import IMG_FOX from "../img/FOX.png";
+import React from "react";
 
 export default function Home() {
   const utils = trpc.useContext();
@@ -45,7 +44,6 @@ export default function Home() {
 
   return (
     <Box h="100vh" flex={"column"}>
-      <Header title="Test"></Header>
       <Stack flex={"column"} justify={"center"} align={"center"}>
         <Flex flex="row" justify={"center"} align={"center"}>
           <Image priority src={IMG_FOX} alt="Fox" />
@@ -64,7 +62,6 @@ export default function Home() {
         >
           {pointBalance !== undefined && (
             <Flex direction="column" w="full">
-              <Box color="yellow.200">{pointBalance}</Box>
               <Grid
                 templateColumns="repeat(6, 1fr)"
                 templateRows="repeat(3, 1fr)"
@@ -179,7 +176,7 @@ export default function Home() {
             {taskList.data !== undefined &&
               taskList.data.tasks.map((pointGroup) => {
                 return (
-                  <>
+                  <React.Fragment key={pointGroup.points}>
                     {pointGroup.tasks.map((task) => {
                       return (
                         <TaskCard
@@ -190,7 +187,7 @@ export default function Home() {
                         />
                       );
                     })}
-                  </>
+                  </React.Fragment>
                 );
               })}
 

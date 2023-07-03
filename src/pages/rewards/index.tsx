@@ -1,7 +1,8 @@
 import React from "react";
-import { Header } from "@/components/Header";
 import {
+  Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
   Link,
@@ -15,36 +16,21 @@ const Rewards: React.FC = () => {
   const rewardList = trpc.availableRewards.useQuery();
 
   return (
-    <div style={{ height: "100vh" }}>
-      <Header title="Rewards" />
-      <FormControl display="flex" alignItems="center">
-        <FormLabel htmlFor="email-alerts" mb="0">
-          View Completed Rewards
-        </FormLabel>
-        <Switch id="completed-rewards" />
-      </FormControl>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          // margin: "20px",
-
-          width: "100%",
-          boxSizing: "border-box",
-          maxWidth: "100rem",
-          marginLeft: "auto",
-          marginRight: "auto",
-          paddingLeft: "1.875rem",
-          paddingRight: "1.875rem",
-        }}
+    <Box h="full">
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        w="full"
+        maxW="6xl"
+        mx="auto"
+        px={{ base: "4", md: "24" }}
+        transition="all 250ms ease-in-out"
       >
-        <SimpleGrid spacing={4} w={"80%"}>
+        <SimpleGrid spacing={4} w="full">
           {rewardList.data !== undefined &&
             rewardList.data.map((rewardGroup) => {
               return (
-                <>
+                <React.Fragment key={rewardGroup.points}>
                   {rewardGroup.rewards.map((reward) => {
                     return (
                       <TaskCard
@@ -55,7 +41,7 @@ const Rewards: React.FC = () => {
                       />
                     );
                   })}
-                </>
+                </React.Fragment>
               );
             })}
 
@@ -65,7 +51,7 @@ const Rewards: React.FC = () => {
             checkbox={true}
           /> */}
         </SimpleGrid>
-      </div>
+      </Flex>
       <Link href="rewards/creation">
         <Button
           colorScheme="teal"
@@ -77,7 +63,7 @@ const Rewards: React.FC = () => {
           Add Reward
         </Button>
       </Link>
-    </div>
+    </Box>
   );
 };
 

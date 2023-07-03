@@ -1,6 +1,3 @@
-import { Header } from "@/components/Header";
-import { TaskCard } from "@/components/TaskCard";
-import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
