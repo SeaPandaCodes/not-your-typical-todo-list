@@ -2,7 +2,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import theme from "../utils/theme";
 
-import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
+import { Box, ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import { trpc } from "@/utils/trpc";
 import { Suspense } from "react";
 import { Header } from "@/components/Header";

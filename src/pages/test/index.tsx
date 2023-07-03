@@ -6,8 +6,6 @@ const Test: React.FC = () => {
 
   const testing = trpc.addTask.useMutation();
 
-  console.log(rewards.data);
-
   return (
     <div>
       <pre>{JSON.stringify(rewards, null, 2)}</pre>
@@ -21,7 +19,6 @@ const Test: React.FC = () => {
         ) : null}
 
         {testing.isSuccess ? <div>Todo added!</div> : null}
-        {console.log(rewards.data)}
 
         <button
           onClick={() => {

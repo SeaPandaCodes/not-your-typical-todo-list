@@ -7,7 +7,5 @@ export default async function handler(
 ) {
   const { rows } = await pool.query("SELECT * FROM test_table");
 
-  // console.log(rows);
-
   res.status(200).json({ name: "John Doe" });
 }
