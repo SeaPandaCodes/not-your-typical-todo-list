@@ -54,11 +54,7 @@ export const GoalProgressBar: React.FC = () => {
             borderRight="4px"
             borderColor="var(--chakra-colors-chakra-body-bg)"
           />
-          <Box
-            w={`calc(${sectionThree}% +  4px)`}
-            borderRight="4px"
-            borderColor="var(--chakra-colors-chakra-body-bg)"
-          />
+          <Box w={`calc(${sectionThree}% +  4px)`} />
         </Flex>
         <Box
           bg="var(--chakra-colors-chakra-body-bg)"

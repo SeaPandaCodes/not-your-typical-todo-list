@@ -3,7 +3,7 @@ import React from "react";
 
 export const TitledContainer: React.FC<{
   title: string;
-  children: React.ReactElement[];
+  children?: React.ReactElement[];
   bottomElement?: React.ReactElement;
 }> = ({ title, children, bottomElement }) => {
   return (
@@ -42,19 +42,21 @@ export const TitledContainer: React.FC<{
       >
         {title}
       </Heading>
-      {React.Children.map(children, (child, index) => (
-        <React.Fragment key={child.key}>
-          {child}
-          {(index !== React.Children.count(children) - 1 || bottomElement) && (
-            <Divider
-              borderBottomWidth={{
-                base: "1px",
-                md: "2px",
-              }}
-            />
-          )}
-        </React.Fragment>
-      ))}
+      {children &&
+        React.Children.map(children, (child, index) => (
+          <React.Fragment key={child.key}>
+            {child}
+            {(index !== React.Children.count(children) - 1 ||
+              bottomElement) && (
+              <Divider
+                borderBottomWidth={{
+                  base: "1px",
+                  md: "2px",
+                }}
+              />
+            )}
+          </React.Fragment>
+        ))}
       {bottomElement}
     </Flex>
   );

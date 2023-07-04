@@ -21,28 +21,49 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import IMG_FOX from "../img/FOX.png";
+import { rewardCreationSchema } from "./rewards/creation";
 
-const NewTask: React.FC<{ points: number }> = ({ points }) => {
+const NewTask: React.FC<{ points: number; type: "task" | "reward" }> = ({
+  points,
+  type,
+}) => {
   const addTask = trpc.addTask.useMutation();
+  const addReward = trpc.addReward.useMutation();
   const utils = trpc.useContext();
 
-  const [taskName, setTaskName] = useState("");
+  const [itemName, setItemName] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e?: { preventDefault?: () => void }) => {
     e?.preventDefault?.();
-    const parseResult = taskCreationSchema.safeParse({
-      name: taskName,
-      points: points.toString(),
-    });
 
-    if (!parseResult.success) return;
+    if (type === "task") {
+      const parseResult = taskCreationSchema.safeParse({
+        name: itemName,
+        points: points.toString(),
+      });
 
-    setLoading(true);
-    await addTask.mutateAsync(parseResult.data);
-    await utils.tasks.refetch();
+      if (!parseResult.success) return;
+
+      setLoading(true);
+      await addTask.mutateAsync(parseResult.data);
+      await utils.tasks.refetch();
+    } else {
+      const parseResult = rewardCreationSchema.safeParse({
+        name: itemName,
+        points: points.toString(),
+        maxRedemptions: null,
+      });
+
+      if (!parseResult.success) return;
+
+      setLoading(true);
+      await addReward.mutateAsync(parseResult.data);
+      await utils.availableRewards.refetch();
+    }
+
     setLoading(false);
-    setTaskName("");
+    setItemName("");
   };
 
   return (
@@ -57,15 +78,15 @@ const NewTask: React.FC<{ points: number }> = ({ points }) => {
         placeholder="Write new task..."
         w="full"
         variant="flushed"
-        value={taskName}
-        onChange={(e) => setTaskName(e.target.value)}
+        value={itemName}
+        onChange={(e) => setItemName(e.target.value)}
       />
       <Button
         variant="ghost"
         isLoading={loading}
         onClick={() => handleSubmit()}
         w="40px"
-        isDisabled={taskName.trim().length === 0}
+        isDisabled={itemName.trim().length === 0}
       >
         <PlusSquareIcon />
       </Button>
@@ -76,13 +97,17 @@ const NewTask: React.FC<{ points: number }> = ({ points }) => {
 export default function Home() {
   const utils = trpc.useContext();
   const taskList = trpc.tasks.useQuery();
+  const rewardList = trpc.availableRewards.useQuery();
   const currentPoints = trpc.currentPoints.useQuery();
 
   const [selectedRewardTier, setSelectedRewardTier] = useState<number | null>(
     null
   );
+  const [selectedList, setSelectedList] = useState<"task" | "reward">("task");
 
   const pointBalance = currentPoints.data?.point_balance;
+
+  const pointTiers = [10, 30, 60];
 
   return (
     <PageLayout buttonSpace={120}>
@@ -193,44 +218,119 @@ export default function Home() {
             </Flex>
           )}
           <Divider my="8" />
-          <Flex flexDir="row" columnGap="10">
-            <Heading
-              textAlign="center"
-              fontSize="2xl"
-              mb="6"
-              borderColor="purple.500"
-              // borderBottom
+          <Box borderWidth="2px" mb="6" position="relative">
+            <Box
+              position="absolute"
+              w="50%"
+              h="full"
+              bg="purple"
+              transform={selectedList !== "task" ? "translateX(100%)" : "auto"}
+              transition="all 320ms ease-in-out"
+              zIndex="-1"
+            />
+            <Flex flexDir="row">
+              <Heading
+                textAlign="center"
+                fontSize="2xl"
+                w="128px"
+                // bg="blue"
+                p="4"
+                // mb="6"
+                borderColor="purple.500"
+                // borderBottom
+                onClick={() => setSelectedList("task")}
+              >
+                Tasks
+              </Heading>
+              <Heading
+                textAlign="center"
+                fontSize="2xl"
+                w="128px"
+                // bg="purple"
+                p="4"
+                // mb="6"
+                onClick={() => setSelectedList("reward")}
+              >
+                Rewards
+              </Heading>
+            </Flex>
+          </Box>
+          <Box position="relative" w="full">
+            <Flex
+              position="absolute"
+              flexDir="column"
+              rowGap="10"
+              w="full"
+              maxW="6xl"
+              transform={selectedList !== "task" ? "translateX(-200%)" : "auto"}
+              transition="all 320ms ease-in-out"
             >
-              Tasks
-            </Heading>
-            <Heading textAlign="center" fontSize="2xl" mb="6">
-              Rewards
-            </Heading>
-          </Flex>
-
-          <Flex flexDir="column" rowGap="10" w="full" maxW="6xl">
-            {taskList.data !== undefined &&
-              taskList.data.tasks.map((pointGroup) => {
-                return (
-                  <TitledContainer
-                    key={pointGroup.points}
-                    title={`${pointGroup.points} Point Tasks`}
-                    bottomElement={<NewTask points={pointGroup.points} />}
-                  >
-                    {pointGroup.tasks.map((task) => {
-                      return (
-                        <TaskCard
-                          task={task.name}
-                          type={"task"}
-                          cardId={task.id}
-                          key={task.id}
-                        />
-                      );
-                    })}
-                  </TitledContainer>
-                );
-              })}
-          </Flex>
+              {taskList.data !== undefined &&
+                pointTiers.map((pointGroup) => {
+                  const pointData = taskList.data.tasks.find(
+                    (x) => x.points === pointGroup
+                  );
+                  return (
+                    <TitledContainer
+                      key={pointGroup}
+                      title={`${pointGroup} Point Tasks`}
+                      bottomElement={
+                        <NewTask points={pointGroup} type="task" />
+                      }
+                    >
+                      {pointData?.tasks.map((task) => {
+                        return (
+                          <TaskCard
+                            task={task.name}
+                            type={"task"}
+                            cardId={task.id}
+                            key={task.id}
+                          />
+                        );
+                      })}
+                    </TitledContainer>
+                  );
+                })}
+            </Flex>
+            <Flex
+              flexDir="column"
+              position="absolute"
+              rowGap="10"
+              w="full"
+              maxW="6xl"
+              transform={
+                selectedList !== "reward" ? "translateX(200%)" : "auto"
+              }
+              transition="all 320ms ease-in-out"
+            >
+              {rewardList.data !== undefined &&
+                pointTiers.map((pointGroup) => {
+                  const pointData = rewardList.data.find(
+                    (x) => x.points === pointGroup
+                  );
+                  return (
+                    <TitledContainer
+                      key={pointGroup}
+                      title={`${pointGroup} Point Rewards`}
+                      bottomElement={
+                        <NewTask points={pointGroup} type="reward" />
+                      }
+                    >
+                      {pointData?.rewards.map((reward) => {
+                        return (
+                          <TaskCard
+                            task={reward.name}
+                            type={"reward"}
+                            cardId={reward.id}
+                            key={reward.id}
+                          />
+                        );
+                      })}
+                    </TitledContainer>
+                  );
+                })}
+            </Flex>
+          </Box>
         </Flex>
         {selectedRewardTier !== null && (
           <RewardModal

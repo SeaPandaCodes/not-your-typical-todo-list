@@ -19,114 +19,115 @@ import {
   useColorMode,
   useDisclosure,
   useOutsideClick,
+  Heading,
 } from "@chakra-ui/react";
 import { usePathname } from "next/navigation";
 import React from "react";
 import FOX_IMG from "../img/FOX.png";
 
-interface LinkItem {
-  path: string;
-  title: string;
-}
+// interface LinkItem {
+//   path: string;
+//   title: string;
+// }
 
-const links: Array<LinkItem> = [
-  {
-    path: "/",
-    title: "Home",
-  },
-  {
-    path: "/tasks",
-    title: "Tasks",
-  },
-  {
-    path: "/tasks/creation",
-    title: "Create Task",
-  },
-  {
-    path: "/rewards",
-    title: "Rewards",
-  },
-  {
-    path: "/rewards/creation",
-    title: "Create Reward",
-  },
-];
+// const links: Array<LinkItem> = [
+//   {
+//     path: "/",
+//     title: "Home",
+//   },
+//   {
+//     path: "/tasks",
+//     title: "Tasks",
+//   },
+//   {
+//     path: "/tasks/creation",
+//     title: "Create Task",
+//   },
+//   {
+//     path: "/rewards",
+//     title: "Rewards",
+//   },
+//   {
+//     path: "/rewards/creation",
+//     title: "Create Reward",
+//   },
+// ];
 
 export const Header: React.FC<{ title?: string }> = ({ title }) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onToggle, onClose } = useDisclosure();
   const pathname = usePathname();
-  const currentPage = links.find((link) => link.path === pathname);
+  // const currentPage = links.find((link) => link.path === pathname);
   const ref = React.useRef<HTMLInputElement>(null);
 
   const sessionId = trpc.getSessionId.useQuery();
 
-  useOutsideClick({
-    ref: ref,
-    handler: () => onClose(),
-  });
+  // useOutsideClick({
+  //   ref: ref,
+  //   handler: () => onClose(),
+  // });
 
-  const MobileNav = () => {
-    return (
-      <Stack
-        // bg={useColorModeValue("white", "gray.800")}
-        p={4}
-        display={{ md: "none" }}
-        bg="var(--chakra-colors-chakra-body-bg)"
-        zIndex={10}
-        pos="relative"
-        // bg="teal.100"
-      >
-        {links.map((link) => (
-          <MobileNavItem key={link.path} {...link} />
-        ))}
-      </Stack>
-    );
-  };
+  // const MobileNav = () => {
+  //   return (
+  //     <Stack
+  //       // bg={useColorModeValue("white", "gray.800")}
+  //       p={4}
+  //       display={{ md: "none" }}
+  //       bg="var(--chakra-colors-chakra-body-bg)"
+  //       zIndex={10}
+  //       pos="relative"
+  //       // bg="teal.100"
+  //     >
+  //       {links.map((link) => (
+  //         <MobileNavItem key={link.path} {...link} />
+  //       ))}
+  //     </Stack>
+  //   );
+  // };
 
-  const MobileNavItem = ({ title, path }: LinkItem) => {
-    const pathname = usePathname();
-    const currentPage = links.find((link) => link.path === pathname);
+  // const MobileNavItem = ({ title, path }: LinkItem) => {
+  //   const pathname = usePathname();
+  //   const currentPage = links.find((link) => link.path === pathname);
 
-    return (
-      <Stack spacing={4}>
-        <Flex
-          py={2}
-          px={2}
-          as={Link}
-          href={path ?? "#"}
-          justify={"space-between"}
-          align={"center"}
-          _hover={{
-            textDecoration: "none",
-            bg: "gray.100",
-            _dark: {
-              bg: "gray.700",
-            },
-          }}
-          onClick={() => onClose()}
-        >
-          <Text
-            fontWeight={600}
-            position="relative"
-            _after={{
-              backfaceVisibility: "hidden",
-              transition: "all 280ms ease-in-out",
-              bottom: 0,
-              content: '" "',
-              position: "absolute",
-              display: "block",
-              margin: "0 auto",
-              w: currentPage?.path === path ? "full" : 0,
-              borderBottom: currentPage?.path === path ? "2px" : 0,
-            }}
-          >
-            {title}
-          </Text>
-        </Flex>
-      </Stack>
-    );
-  };
+  //   return (
+  //     <Stack spacing={4}>
+  //       <Flex
+  //         py={2}
+  //         px={2}
+  //         as={Link}
+  //         href={path ?? "#"}
+  //         justify={"space-between"}
+  //         align={"center"}
+  //         _hover={{
+  //           textDecoration: "none",
+  //           bg: "gray.100",
+  //           _dark: {
+  //             bg: "gray.700",
+  //           },
+  //         }}
+  //         onClick={() => onClose()}
+  //       >
+  //         <Text
+  //           fontWeight={600}
+  //           position="relative"
+  //           _after={{
+  //             backfaceVisibility: "hidden",
+  //             transition: "all 280ms ease-in-out",
+  //             bottom: 0,
+  //             content: '" "',
+  //             position: "absolute",
+  //             display: "block",
+  //             margin: "0 auto",
+  //             w: currentPage?.path === path ? "full" : 0,
+  //             borderBottom: currentPage?.path === path ? "2px" : 0,
+  //           }}
+  //         >
+  //           {title}
+  //         </Text>
+  //       </Flex>
+  //     </Stack>
+  //   );
+  // };
 
   return (
     <Box as="header" position="fixed" top={0} left={0} w="full" zIndex={10}>
@@ -140,7 +141,7 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
         py="2"
         px="4"
       >
-        <Flex
+        {/* <Flex
           flex={{ base: 1, md: "auto" }}
           ml={{ base: -2 }}
           display={{ base: "flex", md: "none" }}
@@ -153,7 +154,7 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
             variant={"ghost"}
             aria-label={"Toggle Navigation"}
           />
-        </Flex>
+        </Flex> */}
 
         <Flex
           flexDirection="row"
@@ -163,8 +164,7 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
 
           // ml={10}
         >
-          <Link
-            href="/"
+          <Box
             position={{ base: "absolute", md: "relative" }}
             left={{ base: "50%", md: "auto" }}
             top={{ base: "30", md: "auto" }}
@@ -175,15 +175,18 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
             transition="none"
           >
             <Image priority src={FOX_IMG} alt="Fox Logo" boxSize="40px" />
-          </Link>
+          </Box>
           <Flex
             flex={{ base: 1 }}
             display={{ base: "none", md: "flex" }}
             w="full"
             columnGap="4"
-            ml="6"
+            // ml="6"
+            alignItems="center"
+            // justifyContent="center"
           >
-            {links.map((link) => {
+            <Heading fontSize="2xl">Not Your Typical To-Do List</Heading>
+            {/* {links.map((link) => {
               return (
                 <React.Fragment key={link.path}>
                   <Link
@@ -222,7 +225,7 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
                   </Link>
                 </React.Fragment>
               );
-            })}
+            })} */}
           </Flex>
         </Flex>
         <Flex columnGap="2">
@@ -250,7 +253,7 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
           </Tooltip>
         </Flex>
       </Flex>
-      <Collapse in={isOpen} animateOpacity ref={ref}>
+      {/* <Collapse in={isOpen} animateOpacity ref={ref}>
         <MobileNav />
         <Box
           position="fixed"
@@ -260,7 +263,7 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
           zIndex="1"
           onClick={() => onClose()}
         />
-      </Collapse>
+      </Collapse> */}
     </Box>
   );
 };
