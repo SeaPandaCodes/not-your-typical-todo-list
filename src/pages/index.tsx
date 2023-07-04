@@ -18,10 +18,16 @@ import {
   Input,
   Link,
   Stack,
+  keyframes,
+  useColorMode,
+  useToast,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import IMG_FOX from "../img/FOX.png";
+import IMG_LOGO from "../img/FishLogo.svg";
+import IMG_WAVES from "../img/LayeredWaves.svg";
 import { rewardCreationSchema } from "./rewards/creation";
+import { TutorialModal } from "@/components/TutorialModal";
 
 const NewTask: React.FC<{ points: number; type: "task" | "reward" }> = ({
   points,
@@ -82,6 +88,12 @@ const NewTask: React.FC<{ points: number; type: "task" | "reward" }> = ({
         onChange={(e) => setItemName(e.target.value)}
       />
       <Button
+        // _light={{
+        //   colorScheme: "orange",
+        //   bg: "orange.50",
+        // }}
+        // bg="gray.800"
+        // colorScheme="gray.800"
         variant="ghost"
         isLoading={loading}
         onClick={() => handleSubmit()}
@@ -108,12 +120,50 @@ export default function Home() {
   const pointBalance = currentPoints.data?.point_balance;
 
   const pointTiers = [10, 30, 60];
+  const toast = useToast();
 
+  useEffect(() => {
+    return;
+  }, []);
+
+  const { colorMode } = useColorMode();
+
+  const spin = keyframes`
+  from {transform: rotate(0deg);}
+  to {transform: rotate(180deg)}
+`;
+
+  const spinBack = keyframes`
+from {transform: rotate(180deg);}
+to {transform: rotate(360deg)}
+`;
+  const spinAnimation = `${spin} 1.25s linear`;
+  const spinBackAnimation = `${spinBack} 1.25s linear`;
   return (
     <PageLayout buttonSpace={120}>
+      <TutorialModal />
       <Stack flex={"column"} justify={"center"} align={"center"}>
-        <Flex flex="row" justify={"center"} align={"center"}>
-          <Image priority src={IMG_FOX} alt="Fox" />
+        <Flex
+          flex="row"
+          justify={"center"}
+          align={"center"}
+          bg="black"
+          borderRadius={"100%"}
+          animation={colorMode === "dark" ? spinAnimation : spinBackAnimation}
+          _light={{
+            transform: "rotate(360deg)",
+          }}
+          border="2px solid black"
+          transform="rotate(180deg)"
+          transition="all 250ms ease-in-out"
+        >
+          <Image
+            src={IMG_LOGO}
+            priority={true}
+            width={340}
+            height={340}
+            alt="Fish Logo"
+          />
         </Flex>
         <Heading textAlign="center" fontSize="2xl" mt="6">
           Claim Reward
@@ -145,28 +195,37 @@ export default function Home() {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <Grid
-                    w="full"
-                    templateColumns="1fr 60px 1fr"
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <Box></Box>
-                    <Button
-                      wordBreak="break-word"
-                      onClick={() => {
+                  <Button
+                    w="60px"
+                    wordBreak="break-word"
+                    onClick={() => {
+                      if (
+                        rewardList.data === undefined ||
+                        rewardList.data.find((x) => x.points === 10) ===
+                          undefined
+                      ) {
+                        toast({
+                          title: "No 10 Point Rewards",
+                          description: "Please create a reward to redeem",
+                          status: "warning",
+                          duration: 6000,
+                          position: "bottom",
+                          isClosable: true,
+                        });
+                        document.getElementById("reward-10")?.scrollIntoView();
+                      } else {
                         setSelectedRewardTier(10);
-                      }}
-                      onMouseEnter={() => {
-                        utils.availableRewards.prefetch();
-                      }}
-                      border={pointBalance < 10 ? "none" : "2px"}
-                      borderColor="purple.200"
-                      isDisabled={pointBalance < 10}
-                    >
-                      -10
-                    </Button>
-                  </Grid>
+                      }
+                    }}
+                    onMouseEnter={() => {
+                      utils.availableRewards.prefetch();
+                    }}
+                    border={pointBalance < 10 ? "none" : "2px"}
+                    borderColor="teal.200"
+                    isDisabled={pointBalance < 10}
+                  >
+                    -10
+                  </Button>
                 </GridItem>
                 <GridItem
                   rowStart={3}
@@ -179,14 +238,30 @@ export default function Home() {
                     w="60px"
                     wordBreak="break-word"
                     onClick={() => {
-                      setSelectedRewardTier(30);
+                      if (
+                        rewardList.data === undefined ||
+                        rewardList.data.find((x) => x.points === 30) ===
+                          undefined
+                      ) {
+                        toast({
+                          title: "No 30 Point Rewards",
+                          description: "Please create a reward to redeem",
+                          status: "warning",
+                          duration: 6000,
+                          position: "bottom",
+                          isClosable: true,
+                        });
+                        document.getElementById("reward-30")?.scrollIntoView();
+                      } else {
+                        setSelectedRewardTier(30);
+                      }
                     }}
                     onMouseEnter={() => {
                       utils.availableRewards.prefetch();
                     }}
                     isDisabled={pointBalance < 30}
                     border={pointBalance < 30 ? "none" : "2px"}
-                    borderColor="purple.400"
+                    borderColor="teal.400"
                   >
                     -30
                   </Button>
@@ -202,14 +277,30 @@ export default function Home() {
                     w="60px"
                     wordBreak="break-word"
                     onClick={() => {
-                      setSelectedRewardTier(60);
+                      if (
+                        rewardList.data === undefined ||
+                        rewardList.data.find((x) => x.points === 60) ===
+                          undefined
+                      ) {
+                        toast({
+                          title: "No 60 Point Rewards",
+                          description: "Please create a reward to redeem",
+                          status: "warning",
+                          duration: 6000,
+                          position: "bottom",
+                          isClosable: true,
+                        });
+                        document.getElementById("reward-60")?.scrollIntoView();
+                      } else {
+                        setSelectedRewardTier(60);
+                      }
                     }}
                     onMouseEnter={() => {
                       utils.availableRewards.prefetch();
                     }}
                     isDisabled={pointBalance < 60}
                     border={pointBalance < 60 ? "none" : "2px"}
-                    borderColor="purple.800"
+                    borderColor="teal.800"
                   >
                     -60
                   </Button>
@@ -223,7 +314,7 @@ export default function Home() {
               position="absolute"
               w="50%"
               h="full"
-              bg="purple"
+              bg={selectedList !== "task" ? "teal.400" : "purple.400"}
               transform={selectedList !== "task" ? "translateX(100%)" : "auto"}
               transition="all 320ms ease-in-out"
               zIndex="-1"
@@ -262,8 +353,13 @@ export default function Home() {
               rowGap="10"
               w="full"
               maxW="6xl"
-              transform={selectedList !== "task" ? "translateX(-200%)" : "auto"}
-              transition="all 320ms ease-in-out"
+              h={selectedList !== "task" ? "100vh" : "auto"}
+              overflow={selectedList !== "task" ? "hidden" : "visible"}
+              transform={
+                selectedList !== "task" ? "translateX(-120vw)" : "auto"
+              }
+              transition="all 400ms ease-in-out"
+              mt="5px"
             >
               {taskList.data !== undefined &&
                 pointTiers.map((pointGroup) => {
@@ -277,6 +373,7 @@ export default function Home() {
                       bottomElement={
                         <NewTask points={pointGroup} type="task" />
                       }
+                      color="purple"
                     >
                       {pointData?.tasks.map((task) => {
                         return (
@@ -298,10 +395,12 @@ export default function Home() {
               rowGap="10"
               w="full"
               maxW="6xl"
+              overflow={selectedList !== "reward" ? "hidden" : "visible"}
+              h={selectedList !== "reward" ? "100vh" : "auto"}
               transform={
-                selectedList !== "reward" ? "translateX(200%)" : "auto"
+                selectedList !== "reward" ? "translateX(120vw) " : "auto"
               }
-              transition="all 320ms ease-in-out"
+              transition="all 400ms ease-in-out"
             >
               {rewardList.data !== undefined &&
                 pointTiers.map((pointGroup) => {
@@ -310,11 +409,13 @@ export default function Home() {
                   );
                   return (
                     <TitledContainer
+                      id={"reward" + "-" + pointGroup}
                       key={pointGroup}
                       title={`${pointGroup} Point Rewards`}
                       bottomElement={
                         <NewTask points={pointGroup} type="reward" />
                       }
+                      color="teal"
                     >
                       {pointData?.rewards.map((reward) => {
                         return (
@@ -338,18 +439,6 @@ export default function Home() {
             onSelection={() => setSelectedRewardTier(null)}
           />
         )}
-
-        <Link href="tasks/creation">
-          <Button
-            colorScheme="teal"
-            size="lg"
-            position="fixed"
-            bottom="20px"
-            right="20px"
-          >
-            Add Task
-          </Button>
-        </Link>
       </Stack>
     </PageLayout>
   );

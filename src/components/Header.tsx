@@ -24,6 +24,7 @@ import {
 import { usePathname } from "next/navigation";
 import React from "react";
 import FOX_IMG from "../img/FOX.png";
+import IMG_LOGO from "../img/FishLogo.svg";
 
 // interface LinkItem {
 //   path: string;
@@ -62,73 +63,6 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
 
   const sessionId = trpc.getSessionId.useQuery();
 
-  // useOutsideClick({
-  //   ref: ref,
-  //   handler: () => onClose(),
-  // });
-
-  // const MobileNav = () => {
-  //   return (
-  //     <Stack
-  //       // bg={useColorModeValue("white", "gray.800")}
-  //       p={4}
-  //       display={{ md: "none" }}
-  //       bg="var(--chakra-colors-chakra-body-bg)"
-  //       zIndex={10}
-  //       pos="relative"
-  //       // bg="teal.100"
-  //     >
-  //       {links.map((link) => (
-  //         <MobileNavItem key={link.path} {...link} />
-  //       ))}
-  //     </Stack>
-  //   );
-  // };
-
-  // const MobileNavItem = ({ title, path }: LinkItem) => {
-  //   const pathname = usePathname();
-  //   const currentPage = links.find((link) => link.path === pathname);
-
-  //   return (
-  //     <Stack spacing={4}>
-  //       <Flex
-  //         py={2}
-  //         px={2}
-  //         as={Link}
-  //         href={path ?? "#"}
-  //         justify={"space-between"}
-  //         align={"center"}
-  //         _hover={{
-  //           textDecoration: "none",
-  //           bg: "gray.100",
-  //           _dark: {
-  //             bg: "gray.700",
-  //           },
-  //         }}
-  //         onClick={() => onClose()}
-  //       >
-  //         <Text
-  //           fontWeight={600}
-  //           position="relative"
-  //           _after={{
-  //             backfaceVisibility: "hidden",
-  //             transition: "all 280ms ease-in-out",
-  //             bottom: 0,
-  //             content: '" "',
-  //             position: "absolute",
-  //             display: "block",
-  //             margin: "0 auto",
-  //             w: currentPage?.path === path ? "full" : 0,
-  //             borderBottom: currentPage?.path === path ? "2px" : 0,
-  //           }}
-  //         >
-  //           {title}
-  //         </Text>
-  //       </Flex>
-  //     </Stack>
-  //   );
-  // };
-
   return (
     <Box as="header" position="fixed" top={0} left={0} w="full" zIndex={10}>
       <Flex
@@ -141,21 +75,6 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
         py="2"
         px="4"
       >
-        {/* <Flex
-          flex={{ base: 1, md: "auto" }}
-          ml={{ base: -2 }}
-          display={{ base: "flex", md: "none" }}
-        >
-          <IconButton
-            onClick={onToggle}
-            icon={
-              isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
-            }
-            variant={"ghost"}
-            aria-label={"Toggle Navigation"}
-          />
-        </Flex> */}
-
         <Flex
           flexDirection="row"
           columnGap={5}
@@ -174,7 +93,14 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
             }}
             transition="none"
           >
-            <Image priority src={FOX_IMG} alt="Fox Logo" boxSize="40px" />
+            <Image
+              src={IMG_LOGO}
+              priority
+              boxSize="40px"
+              alt="Fish Logo"
+              bgColor={"black"}
+              borderRadius={"100%"}
+            />
           </Box>
           <Flex
             flex={{ base: 1 }}

@@ -40,24 +40,33 @@ export const GoalProgressBar: React.FC = () => {
         <Flex
           w="full"
           h="12"
-          bgGradient="linear(to-r, purple.100, purple.400, purple.800)"
+          bgGradient="linear(to-r, teal.100, teal.400, teal.800)"
           direction="row"
           transition="all 0.5s ease-in-out"
         >
           <Box
             w={`calc(${sectionOne}% + 4px)`}
             borderRight="4px"
-            borderColor="var(--chakra-colors-chakra-body-bg)"
+            _light={{
+              borderColor: "orange.50",
+            }}
+            borderColor="gray.800"
           />
           <Box
             w={`calc(${sectionTwo}% + 4px)`}
             borderRight="4px"
-            borderColor="var(--chakra-colors-chakra-body-bg)"
+            _light={{
+              borderColor: "orange.50",
+            }}
+            borderColor="gray.800"
           />
           <Box w={`calc(${sectionThree}% +  4px)`} />
         </Flex>
         <Box
-          bg="var(--chakra-colors-chakra-body-bg)"
+          _light={{
+            bg: "orange.50",
+          }}
+          bg="gray.800"
           opacity="80%"
           position="absolute"
           top={0}

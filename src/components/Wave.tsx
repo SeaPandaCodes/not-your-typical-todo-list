@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import React, { useEffect, useRef } from "react";
 
-export const Wave: React.FC = () => {
+export const Wave: React.FC<{ colors?: Array<string> }> = ({ colors }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {

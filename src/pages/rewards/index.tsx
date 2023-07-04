@@ -51,25 +51,8 @@ const Rewards: React.FC = () => {
                 </TitledContainer>
               );
             })}
-
-          {/* <TaskCard
-            task={`HHHHHHHHDASHDKJHASKJDHLKJAJSKDJKLSJDKLJSALKDJLKSJDKLJSLSADKJDLKAJWLKDJLKWAJDLKJAWLKDJLKWJA
-              SLKDJKLAJDLKJWfsddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddLAKJDKLJLKSAJLKDJSKLWHDNJKAWNFKLDNFKSNAs`}
-            checkbox={true}
-          /> */}
         </Flex>
       </Flex>
-      <Link href="rewards/creation">
-        <Button
-          colorScheme="teal"
-          size="lg"
-          position="fixed"
-          bottom="20px"
-          right="20px"
-        >
-          Add Reward
-        </Button>
-      </Link>
     </PageLayout>
   );
 };

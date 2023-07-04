@@ -9,21 +9,23 @@ import {
   ModalHeader,
   ModalOverlay,
   VStack,
-  Image,
   Box,
   Text,
   useDisclosure,
+  Icon,
+  keyframes,
+  Divider,
 } from "@chakra-ui/react";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { confetti } from "tsparticles-confetti";
+import { FaDice } from "react-icons/fa";
+import IMG_LOGO from "../img/FishLogo.svg";
+import { Image } from "@chakra-ui/next-js";
 
 export const RewardModal: React.FC<{
   selectedRewardTier: number;
   onSelection: () => void;
 }> = ({ selectedRewardTier, onSelection }) => {
-  // TEST
-  // const { isOpen, onOpen, onClose } = useDisclosure();
-
   const [discarded, setDiscarded] = useState<Set<string>>(new Set());
 
   const utils = trpc.useContext();
@@ -54,15 +56,6 @@ export const RewardModal: React.FC<{
     return null;
   }
 
-  // const particlesInit = async (main: any) => {
-  //   console.log(main);
-
-  //   // you can initialize the tsParticles instance (main) here, adding custom shapes or presets
-  //   // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
-  //   // starting from v2 you can add only the features you need reducing the bundle size
-  //   await loadFull(main);
-  // };
-
   function launchConfetti() {
     const defaults = {
       spread: 360,
@@ -73,53 +66,97 @@ export const RewardModal: React.FC<{
     };
     confetti({
       ...defaults,
-      particleCount: 30,
+      particleCount: 60,
       scalar: 1.2,
-      shapes: ["circle", "square"],
+      shapes: ["circle", "square", "star"],
       colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"],
     });
 
     confetti({
       ...defaults,
-      particleCount: 20,
-      scalar: 2,
+      particleCount: 40,
+      scalar: 3,
       shapes: ["text"],
       shapeOptions: {
         text: {
-          value: ["🦄", "🌈"],
+          value: ["🦈", "🐡", "🐳", "🐙", "🐠"],
         },
       },
     });
   }
 
+  const spin = keyframes`
+  from {transform: rotate(0deg);}
+  to {transform: rotate(1080deg)}
+`;
+
+  const spinAnimation = `${spin} 2s linear`;
+
+  const [fishSpin, setFishSpin] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (fishSpin === true) {
+      setTimeout(() => {
+        setFishSpin(false);
+      }, 2050);
+    }
+  }, [fishSpin]);
+
+  console.log(fishSpin);
+
   return (
     <Modal isOpen={true} onClose={() => onSelection()} isCentered>
       <ModalOverlay />
-      <ModalContent maxW="56rem">
+      <ModalContent
+        maxW="56rem"
+        bg="orange.50"
+        _dark={{
+          bg: "gray.800",
+        }}
+      >
         <ModalHeader></ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <VStack>
-            <Box boxSize="md">
+            <Box
+              bg="black"
+              borderRadius={"100%"}
+              animation={fishSpin ? spinAnimation : "none"}
+              // transition="all 250ms ease-in-out"
+            >
               <Image
-                src="https://etc.usf.edu/clipart/72400/72419/72419_rey_finding_lg.gif"
-                alt="Fox"
+                src={IMG_LOGO}
+                priority={true}
+                boxSize="300px"
+                alt="Fish Logo"
               />
             </Box>
-            <Text fontSize="4xl">{randomReward.name}</Text>
+            <Box overflow="hidden">
+              <Text
+                fontSize="4xl"
+                top="0"
+                transform={fishSpin ? "translateY(-180%)" : "translateY(0)"}
+                transition={fishSpin ? "none" : "transform 250ms ease-in-out"}
+              >
+                {randomReward.name}
+              </Text>
+            </Box>
+            <Divider borderBottomWidth="3px" borderBottomColor="teal.800" />
 
             <Button
               isDisabled={rewardLength === 1}
-              onClick={() =>
+              onClick={() => {
+                setFishSpin(true);
                 setDiscarded((d) => {
                   const newDiscarded = new Set(d);
                   newDiscarded.add(randomReward.id);
 
                   return newDiscarded;
-                })
-              }
+                });
+              }}
             >
-              Re-Roll
+              <Icon as={FaDice} boxSize={6} />
+              &nbsp;&nbsp;Re-Roll
             </Button>
           </VStack>
         </ModalBody>
@@ -129,6 +166,8 @@ export const RewardModal: React.FC<{
             colorScheme="blue"
             mr={3}
             onClick={async () => {
+              console.log(fishSpin);
+
               await redeemRewardMutation.mutateAsync({
                 rewardId: randomReward.id,
               });

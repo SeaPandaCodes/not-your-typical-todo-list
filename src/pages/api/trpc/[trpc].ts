@@ -5,6 +5,7 @@ import cookie from "cookie";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import ms from "ms";
+import { createSampleRewards, createSampleTasks } from "@/utils/sample";
 
 const sessionCookie = "task_app_session";
 
@@ -31,7 +32,8 @@ export default trpcNext.createNextApiHandler({
     if (userId === undefined) {
       userId = crypto.randomBytes(16).toString("hex");
       // Initialize db
-      // await create sample tasks
+      await createSampleTasks(userId);
+      await createSampleRewards(userId);
       // await create sample rewards
     }
 

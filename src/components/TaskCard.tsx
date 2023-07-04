@@ -1,6 +1,6 @@
 import { DeleteIcon } from "@chakra-ui/icons";
 import { Checkbox, Flex, Grid, IconButton, Text, Box } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { trpc } from "@/utils/trpc";
 
 export const TaskCard: React.FC<{
@@ -14,10 +14,11 @@ export const TaskCard: React.FC<{
 
   const deleteReward = trpc.deleteReward.useMutation();
   const deleteTask = trpc.deleteTask.useMutation();
+  const [taskCompleted, setTaskCompleted] = useState<boolean>(false);
 
   return (
     <Grid
-      bg="white"
+      bg="orange.50"
       _dark={{
         bg: "gray.800",
       }}
@@ -31,6 +32,12 @@ export const TaskCard: React.FC<{
         type === "task" ? "min-content 1fr min-content" : "1fr min-content"
       }
       alignItems="center"
+      overflow={"hidden"}
+      // transform={taskCompleted === true ? "scale(0)" : "scale(1)"}
+      transform={taskCompleted === true ? "translateX(300%)" : "translateX(0%)"}
+      // zIndex={taskCompleted === true ? "-2" : 0}
+      transition="all 0.8s ease-in-out"
+      // opacity={taskCompleted === false ? "1" : "0.26"}
     >
       {type === "task" && (
         <Checkbox
@@ -39,8 +46,12 @@ export const TaskCard: React.FC<{
           borderColor="purple.500"
           onChange={async () => {
             await completeTask.mutateAsync({ taskId: cardId });
-            await utils.tasks.fetch();
-            await utils.currentPoints.fetch();
+            setTaskCompleted(true);
+            setTimeout(async () => {
+              await utils.tasks.fetch();
+              await utils.currentPoints.fetch();
+            }, 200);
+
             return;
           }}
         ></Checkbox>

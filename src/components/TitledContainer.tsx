@@ -5,22 +5,30 @@ export const TitledContainer: React.FC<{
   title: string;
   children?: React.ReactElement[];
   bottomElement?: React.ReactElement;
-}> = ({ title, children, bottomElement }) => {
+  id?: string;
+  color: string;
+}> = ({ title, children, bottomElement, id, color }) => {
   return (
     <Flex
+      mt="18px"
+      id={id}
+      mb={title.includes("60") ? "180px" : "0px"}
       flexDir="column"
       rowGap={{ base: "2", md: "4" }}
       border="4px"
       p="4"
       pt={{ base: "6", md: "8" }}
-      borderColor="purple.800"
+      borderColor={`${color}.800`}
       _light={{
-        borderColor: "purple.600",
+        borderColor: `${color}.600`,
+        bg: "orange.50",
       }}
+      bg="gray.800"
       borderRadius="xl"
-      bg="var(--chakra-colors-chakra-body-bg)"
       pos="relative"
       alignItems="center"
+      // overflowX="hidden"
+      // overflowX="hidden"
     >
       <Heading
         pos="absolute"
@@ -35,7 +43,10 @@ export const TitledContainer: React.FC<{
           base: "md",
           md: "2xl",
         }}
-        bg="var(--chakra-colors-chakra-body-bg)"
+        _light={{
+          bg: "orange.50",
+        }}
+        bg="gray.800"
         px="5"
         py="1"
         rounded="full"
