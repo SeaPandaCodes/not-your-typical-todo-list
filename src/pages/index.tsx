@@ -30,6 +30,7 @@ import { TriangleDownIcon } from "@chakra-ui/icons";
 import { RewardModal } from "@/components/RewardModal";
 import IMG_FOX from "../img/FOX.png";
 import React from "react";
+import { GoalProgressBar } from "@/components/GoalProgressBar";
 
 export default function Home() {
   const utils = trpc.useContext();
@@ -62,6 +63,8 @@ export default function Home() {
         >
           {pointBalance !== undefined && (
             <Flex direction="column" w="full">
+              <GoalProgressBar />
+
               <Grid
                 templateColumns="repeat(6, 1fr)"
                 templateRows="repeat(3, 1fr)"
@@ -69,20 +72,10 @@ export default function Home() {
                 h="180"
               >
                 <GridItem
-                  // colStart={
-                  //   pointBalance > 60
-                  //     ? 6
-                  //     : pointBalance / 10
-                  // }
                   colSpan={6}
                   w="full"
                   rowStart={1}
                   position="relative"
-                  // alignItems={
-                  //   pointBalance >= 60
-                  //     ? "flex-end"
-                  //     : "center"
-                  // }
                   pb="2"
                 >
                   <Flex
@@ -101,13 +94,27 @@ export default function Home() {
                 </GridItem>
 
                 <GridItem
-                  bg="pink.100"
+                  bg="purple.200"
+                  filter={pointBalance >= 10 ? "saturate(1)" : "saturate(20%)"}
                   colSpan={1}
                   w="full"
                   rowStart={2}
                 ></GridItem>
-                <GridItem bg="pink.300" colSpan={2} rowStart={2}></GridItem>
-                <GridItem bg="pink.800" colSpan={3} rowStart={2}></GridItem>
+                <GridItem
+                  bg="purple.400"
+                  filter={pointBalance >= 30 ? "saturate(1)" : "saturate(20%)"}
+                  colSpan={2}
+                  rowStart={2}
+                ></GridItem>
+                <GridItem
+                  bg="purple.800"
+                  filter={pointBalance >= 60 ? "saturate(1)" : "saturate(20%)"}
+                  colSpan={3}
+                  rowStart={2}
+                ></GridItem>
+                {/* <GridItem rowStart={3} colStart={1}>
+                  TEST
+                </GridItem> */}
                 <GridItem
                   rowStart={3}
                   colSpan={2}
@@ -143,9 +150,9 @@ export default function Home() {
                     onMouseEnter={() => {
                       utils.availableRewards.prefetch();
                     }}
-                    isDisabled={pointBalance < 20}
+                    isDisabled={pointBalance < 30}
                   >
-                    Redeem Medium
+                    -30
                   </Button>
                 </GridItem>
                 <GridItem
@@ -166,7 +173,7 @@ export default function Home() {
                     }}
                     isDisabled={pointBalance < 60}
                   >
-                    Redeem Difficult
+                    -60
                   </Button>
                 </GridItem>
               </Grid>

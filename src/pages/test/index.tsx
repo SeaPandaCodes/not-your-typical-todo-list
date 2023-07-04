@@ -1,40 +1,34 @@
-import { trpc } from "@/utils/trpc";
-import React from "react";
+import { Box } from "@chakra-ui/react";
+import IMG_WAVE from "../../img/LayeredWaves.svg";
+import Image from "next/image";
 
-const Test: React.FC = () => {
-  const rewards = trpc.availableRewards.useQuery();
-
-  const testing = trpc.addTask.useMutation();
-
+export default function test() {
   return (
-    <div>
-      <pre>{JSON.stringify(rewards, null, 2)}</pre>
-      {/* <div>
-        {testing.isLoading ? (
-          "Adding todo..."
-        ) : ( */}
-      <>
-        {testing.isError ? (
-          <div>An error occurred: {testing.error.message}</div>
-        ) : null}
-
-        {testing.isSuccess ? <div>Todo added!</div> : null}
-
-        <button
-          onClick={() => {
-            testing.mutate({
-              name: "TEST",
-              points: 20,
-            });
-          }}
-        >
-          Create Todo
-        </button>
-      </>
-      {/* )} */}
-      {/* </div> */}
-    </div>
+    <Box
+      pos="relative"
+      // h="400px"
+      h="100vh"
+      bgImage={`url(${IMG_WAVE})`}
+      aspectRatio={960 / 300}
+      backgroundRepeat="no-repeat"
+      backgroundPosition="center"
+      backgroundSize="cover"
+      bg="rgba(255,0,0,0.1)"
+      // _before={{
+      //   content: '""',
+      //   bgImage: `url(${IMG_WAVE})`,
+      //   bgSize: "cover",
+      //   pos: "absolute",
+      //   top: 0,
+      //   right: 0,
+      //   left: 0,
+      //   bottom: 0,
+      //   opacity: 0.9,
+      // }}
+      mt="60"
+    >
+      {/* <Image src={IMG_WAVE} /> */}
+      TEST
+    </Box>
   );
-};
-
-export default Test;
+}

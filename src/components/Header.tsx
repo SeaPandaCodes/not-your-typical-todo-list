@@ -105,8 +105,14 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
               position: "absolute",
               display: "block",
               margin: "0 auto",
-              w: links[currentPage].path === path ? "full" : 0,
-              borderBottom: links[currentPage].path === path ? "2px" : 0,
+              w:
+                currentPage !== -1 && links[currentPage].path === path
+                  ? "full"
+                  : 0,
+              borderBottom:
+                currentPage !== -1 && links[currentPage].path === path
+                  ? "2px"
+                  : 0,
             }}
           >
             {title}
@@ -204,9 +210,16 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
                       position: "absolute",
                       display: "block",
                       margin: "0 auto",
-                      w: links[currentPage].path === link.path ? "full" : 0,
+                      w:
+                        currentPage !== -1 &&
+                        links[currentPage].path === link.path
+                          ? "full"
+                          : 0,
                       borderBottom:
-                        links[currentPage].path === link.path ? "2px" : 0,
+                        currentPage !== -1 &&
+                        links[currentPage].path === link.path
+                          ? "2px"
+                          : 0,
                     }}
                   >
                     {link.title}
