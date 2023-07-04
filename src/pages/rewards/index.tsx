@@ -9,50 +9,36 @@ import {
   Link,
   SimpleGrid,
   Switch,
+  Divider,
 } from "@chakra-ui/react";
 import { TaskCard } from "@/components/TaskCard";
 import { trpc } from "@/utils/trpc";
+import { PageLayout } from "@/components/PageLayout";
+import { TitledContainer } from "@/components/TitledContainer";
 
 const Rewards: React.FC = () => {
   const rewardList = trpc.availableRewards.useQuery();
 
   return (
-    <Box h="full" mb="20">
+    <PageLayout buttonSpace={120}>
       <Flex
         justifyContent="center"
         alignItems="center"
         w="full"
-        maxW="6xl"
+        maxW="4xl"
         mx="auto"
         px={{ base: "4", md: "24" }}
         transition="all 250ms ease-in-out"
       >
-        <SimpleGrid spacing={4} w="full">
+        <Flex flexDir="column" rowGap="10" w="full">
           {rewardList.data !== undefined &&
             rewardList.data.map((rewardGroup) => {
               return (
-                <Flex
-                  key={rewardGroup.points}
-                  flexDir="column"
-                  rowGap={5}
-                  m={5}
-                  border="4px"
-                  p="8"
-                  borderColor="purple.800"
-                  borderRadius="xl"
+                <TitledContainer
+                  key={rewardGroup.points.toString()}
+                  title={`${rewardGroup.points} Point Rewards`}
                 >
-                  <Heading
-                    mt="-50px"
-                    mb={2}
-                    fontSize="2xl"
-                    bg="var(--chakra-colors-chakra-body-bg)"
-                    mx="5"
-                    px="5"
-                    w="fit-content"
-                  >
-                    {rewardGroup.points} Point Rewards
-                  </Heading>
-                  {rewardGroup.rewards.map((reward) => {
+                  {rewardGroup.rewards.map((reward, index) => {
                     return (
                       <TaskCard
                         task={reward.name}
@@ -62,7 +48,7 @@ const Rewards: React.FC = () => {
                       />
                     );
                   })}
-                </Flex>
+                </TitledContainer>
               );
             })}
 
@@ -71,7 +57,7 @@ const Rewards: React.FC = () => {
               SLKDJKLAJDLKJWfsddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddLAKJDKLJLKSAJLKDJSKLWHDNJKAWNFKLDNFKSNAs`}
             checkbox={true}
           /> */}
-        </SimpleGrid>
+        </Flex>
       </Flex>
       <Link href="rewards/creation">
         <Button
@@ -84,7 +70,7 @@ const Rewards: React.FC = () => {
           Add Reward
         </Button>
       </Link>
-    </Box>
+    </PageLayout>
   );
 };
 

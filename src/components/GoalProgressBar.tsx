@@ -5,11 +5,6 @@ import React, { useState } from "react";
 
 export const GoalProgressBar: React.FC = () => {
   const currentPoints = trpc.currentPoints.useQuery();
-
-  const [selectedRewardTier, setSelectedRewardTier] = useState<number | null>(
-    null
-  );
-
   const pointBalance = currentPoints.data?.point_balance;
 
   if (pointBalance === undefined) {
@@ -20,43 +15,49 @@ export const GoalProgressBar: React.FC = () => {
   const sectionTwo = (2 / 6) * 100;
   const sectionThree = (3 / 6) * 100;
 
-  console.log(sectionOne);
-
   return (
-    <Flex flexDirection="column" w="full" position="relative" pb="2">
+    <Flex flexDirection="column" w="full" position="relative" pb="2" mt="64px">
       <Flex
-        transform="translateX(-50%)"
+        transform="translateX(-50%) translateY(-120%)"
         position="absolute"
         flexDirection="column"
         alignItems="center"
         transition="left 250ms ease-in-out"
+        top="0"
         left={(Math.min(pointBalance / 60, 1) * 100).toString() + "%"}
       >
         <Text>{pointBalance}</Text>
         <TriangleDownIcon boxSize={6} />
       </Flex>
-      <Box w="full" m="0 auto" position="relative" overflow="hidden">
+
+      <Box
+        w="full"
+        m="0 auto"
+        position="relative"
+        overflow="hidden"
+        borderRadius="md"
+      >
         <Flex
           w="full"
           h="12"
-          bgGradient="linear(to-r, purple.200, purple.400, purple.800)"
+          bgGradient="linear(to-r, purple.100, purple.400, purple.800)"
           direction="row"
           transition="all 0.5s ease-in-out"
         >
           <Box
-            w={`${sectionOne}%`}
-            borderRight="2px"
-            borderColor="purple.900"
+            w={`calc(${sectionOne}% + 4px)`}
+            borderRight="4px"
+            borderColor="var(--chakra-colors-chakra-body-bg)"
           />
           <Box
-            w={`${sectionTwo}%`}
-            borderRight="2px"
-            borderColor="purple.900"
+            w={`calc(${sectionTwo}% + 4px)`}
+            borderRight="4px"
+            borderColor="var(--chakra-colors-chakra-body-bg)"
           />
           <Box
-            w={`${sectionThree}%`}
-            borderRight="2px"
-            borderColor="purple.900"
+            w={`calc(${sectionThree}% +  4px)`}
+            borderRight="4px"
+            borderColor="var(--chakra-colors-chakra-body-bg)"
           />
         </Flex>
         <Box

@@ -19,7 +19,7 @@ export const appRouter = router({
           jsonb_agg(jsonb_build_object('id', id, 'name', name)) as tasks
         FROM tasks
         WHERE user_id = $1 AND completed_at IS NULL
-        GROUP BY points`,
+        GROUP BY points ORDER BY points`,
       [userId]
     );
 
@@ -67,8 +67,9 @@ export const appRouter = router({
        reward_points as
        (SELECT SUM(points) as points
          FROM redemptions
-         LEFT JOIN rewards r on redemptions.reward_id = r.id)
-        SELECT COALESCE(task_points.points - reward_points.points, 0) as point_balance FROM task_points, reward_points;
+         LEFT JOIN rewards r on redemptions.reward_id = r.id
+         WHERE redemptions.user_id = $1)
+        SELECT COALESCE(task_points.points, 0) - COALESCE(reward_points.points, 0) as point_balance FROM task_points, reward_points;
     `,
       [userId]
     );

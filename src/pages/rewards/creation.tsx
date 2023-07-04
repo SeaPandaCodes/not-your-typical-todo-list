@@ -18,44 +18,45 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "@/utils/trpc";
+import { PageLayout } from "@/components/PageLayout";
+
+export const rewardCreationSchema = z.strictObject({
+  name: z.string().min(1, { message: "Required" }),
+  points: z
+    .string()
+    .transform((s) => (s !== null ? parseInt(s) : s))
+    .refine((s) => !Number.isNaN(s), { message: "Required" })
+    .pipe(z.number().positive().max(100).min(10, { message: "Required" })),
+  maxRedemptions: z
+    .string()
+    .nullable()
+    .transform((s) => parseInt(s as string) || null)
+    .pipe(
+      z
+        .number()
+        .positive()
+        .max(10000)
+        .min(1, { message: "Required" })
+        .nullable()
+    ),
+});
 
 const RewardCreation: React.FC = () => {
   const [checked, setChecked] = useState<boolean>(false);
-
-  const schema = z.strictObject({
-    name: z.string().min(1, { message: "Required" }),
-    points: z
-      .string()
-      .transform((s) => (s !== null ? parseInt(s) : s))
-      .refine((s) => !Number.isNaN(s), { message: "Required" })
-      .pipe(z.number().positive().max(100).min(10, { message: "Required" })),
-    maxRedemptions: z
-      .string()
-      .nullable()
-      .transform((s) => parseInt(s as string) || null)
-      .pipe(
-        z
-          .number()
-          .positive()
-          .max(10000)
-          .min(1, { message: "Required" })
-          .nullable()
-      ),
-  });
 
   const {
     formState: { errors, isSubmitting },
     handleSubmit,
     register,
     reset,
-  } = useForm<z.input<typeof schema>>({
+  } = useForm<z.input<typeof rewardCreationSchema>>({
     mode: "onBlur",
     defaultValues: {
       name: "",
       points: "",
       maxRedemptions: null,
     },
-    resolver: zodResolver(schema),
+    resolver: zodResolver(rewardCreationSchema),
   });
 
   const addReward = trpc.addReward.useMutation();
@@ -64,7 +65,7 @@ const RewardCreation: React.FC = () => {
     values.points = values.points.toString();
     values.maxRedemptions =
       values.maxRedemptions === null ? null : values.maxRedemptions.toString();
-    const parsed = schema.parse(values);
+    const parsed = rewardCreationSchema.parse(values);
     try {
       await addReward.mutateAsync(parsed);
       reset();
@@ -75,7 +76,7 @@ const RewardCreation: React.FC = () => {
   });
 
   return (
-    <Box>
+    <PageLayout>
       <Grid minH="100vh" p={3}>
         <VStack spacing={8}>
           <Heading>Add Reward</Heading>
@@ -149,7 +150,7 @@ const RewardCreation: React.FC = () => {
           </form>
         </VStack>
       </Grid>
-    </Box>
+    </PageLayout>
   );
 };
 

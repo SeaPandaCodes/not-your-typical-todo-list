@@ -1,8 +1,7 @@
 import { Box } from "@chakra-ui/react";
-import { PageLayout } from "@/components/PageLayout";
-import { useRef, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
-export default function test() {
+export const Wave: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -24,15 +23,15 @@ export default function test() {
 
     let isHovered = false;
 
-    function onMouseEnter() {
-      isHovered = true;
-    }
-    function onMouseExit() {
-      isHovered = false;
+    function onMouseMove(e: MouseEvent) {
+      const { x, y, width, height } = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - x;
+      const mouseY = e.clientY - y;
+      isHovered =
+        mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height;
     }
 
-    canvas.addEventListener("mouseenter", onMouseEnter);
-    canvas.addEventListener("mouseleave", onMouseExit);
+    window.addEventListener("mousemove", onMouseMove);
 
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
@@ -53,41 +52,7 @@ export default function test() {
       // Clears entire canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      function drawWave(
-        amplitude: number,
-        frequency: number,
-        offset: number,
-        speed: number,
-        color: string
-      ) {
-        const getY = (x: number) => {
-          return Math.sin((x + i * speed) / frequency) * amplitude + offset;
-        };
-
-        const startingY = getY(0);
-        // Starts a new line
-        ctx.beginPath();
-        ctx.moveTo(0, startingY);
-        // Move starting cursor
-        for (let x = 1; x < canvas.width; x += 4) {
-          // Draws a line from the cursor to the next point
-          ctx.lineTo(x, getY(x));
-        }
-        ctx.lineTo(canvas.width, canvas.height);
-        ctx.lineTo(0, canvas.height);
-        ctx.closePath();
-        ctx.fillStyle = color;
-        ctx.fill();
-      }
-
-      // // blue
-      // drawWave(20, 50, 70, 2, "rgba(0,0,255,0.8)");
-      // // green
-      // drawWave(20, 40, 100, 1.5, "rgba(0,255,0,0.8)");
-      // // red
-      // drawWave(20, 50, 160, 1, "rgba(255,0,0,0.8)");
-
-      function drawWave2(options: {
+      function drawWave(options: {
         waves: Array<{
           amplitude: number;
           period: number;
@@ -130,26 +95,16 @@ export default function test() {
       // amplitude = wave height
       // period = distance between peaks
 
-      // Actually draws the line
-      // drawWave2({
-      //   waves: [
-      //     { amplitude: 20, period: 50, speed: 1 },
-      //     { amplitude: 20, period: 240, speed: 4 },
-      //   ],
-      //   color: "rgba(0,0,255,0.6)",
-      //   offset: 50,
-      // });
+      drawWave({
+        waves: [
+          { amplitude: 20, period: 60, speed: 1 },
+          { amplitude: 10, period: 400, speed: 4 },
+        ],
+        color: "rgba(200,200,200,0.65)",
+        offset: 55,
+      });
 
-      // drawWave2({
-      //   waves: [
-      //     { amplitude: 20, period: 60, speed: 1.5 },
-      //     { amplitude: 20, period: 200, speed: 5 },
-      //   ],
-      //   color: "rgba(0,0,255,0.6)",
-      //   offset: 30,
-      // });
-
-      drawWave2({
+      drawWave({
         waves: [
           { amplitude: 20, period: 50, speed: 1 },
           { amplitude: 20, period: 240, speed: 4 },
@@ -158,7 +113,7 @@ export default function test() {
         offset: 50,
       });
 
-      drawWave2({
+      drawWave({
         waves: [
           { amplitude: 20, period: 60, speed: 1.5 },
           { amplitude: 20, period: 200, speed: 5 },
@@ -168,6 +123,19 @@ export default function test() {
         offset: 20,
       });
 
+      drawWave({
+        waves: [
+          { amplitude: 5, period: 40, speed: 2 },
+          {
+            amplitude: 10,
+            period: 100,
+            speed: 3,
+          },
+        ],
+        color: "rgba(0,0,128,1)",
+        offset: 10,
+      });
+
       lastFrame = now;
       nextFrame = requestAnimationFrame(animate);
     }
@@ -175,8 +143,7 @@ export default function test() {
 
     return () => {
       window.removeEventListener("resize", resizeCanvas);
-      canvas.removeEventListener("mouseenter", onMouseEnter);
-      canvas.removeEventListener("mouseleave", onMouseExit);
+      window.removeEventListener("mousemove", onMouseMove);
       if (nextFrame !== undefined) {
         cancelAnimationFrame(nextFrame);
       }
@@ -184,29 +151,16 @@ export default function test() {
   }, []);
 
   return (
-    <PageLayout>
-      <Box
-        as="canvas"
-        ref={canvasRef}
-        position="fixed"
-        bottom="0"
-        left="0"
-        right="0"
-        height="200px"
-        width="100vw"
-      />
-      {/* <Box pos="fixed" right="0" left="0" bottom="0">
-        <Wave />
-      </Box>
-      <Box
-        pos="fixed"
-        right="0"
-        left="0"
-        bottom="0"
-        transform={"scaleX(-1) translateX(-100vw)"}
-      >
-        <Wave flipped />
-      </Box> */}
-    </PageLayout>
+    <Box
+      as="canvas"
+      ref={canvasRef}
+      position="fixed"
+      bottom="0"
+      left="0"
+      right="0"
+      height="200px"
+      width="100vw"
+      zIndex="-1"
+    />
   );
-}
+};

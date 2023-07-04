@@ -1,23 +1,28 @@
+import { trpc } from "@/utils/trpc";
 import {
-  Flex,
-  Button,
-  useColorMode,
+  CloseIcon,
+  HamburgerIcon,
+  InfoIcon,
+  MoonIcon,
+  SunIcon,
+} from "@chakra-ui/icons";
+import { Image, Link } from "@chakra-ui/next-js";
+import {
   Box,
+  Button,
+  Collapse,
+  Flex,
+  IconButton,
   Stack,
   Text,
-  useDisclosure,
-  Collapse,
-  IconButton,
-  useOutsideClick,
   Tooltip,
+  useColorMode,
+  useDisclosure,
+  useOutsideClick,
 } from "@chakra-ui/react";
-import { SunIcon, MoonIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
-import React from "react";
-import { Image, Link } from "@chakra-ui/next-js";
 import { usePathname } from "next/navigation";
+import React from "react";
 import FOX_IMG from "../img/FOX.png";
-import ICON_IMG from "../img/Icon.jpeg";
-import { trpc } from "@/utils/trpc";
 
 interface LinkItem {
   path: string;
@@ -35,7 +40,7 @@ const links: Array<LinkItem> = [
   },
   {
     path: "/tasks/creation",
-    title: "Create Tasks",
+    title: "Create Task",
   },
   {
     path: "/rewards",
@@ -43,14 +48,15 @@ const links: Array<LinkItem> = [
   },
   {
     path: "/rewards/creation",
-    title: "Create Rewards",
+    title: "Create Reward",
   },
 ];
 
 export const Header: React.FC<{ title?: string }> = ({ title }) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onToggle, onClose } = useDisclosure();
-  const currentPage = links.map((link) => link.path).indexOf(usePathname());
+  const pathname = usePathname();
+  const currentPage = links.find((link) => link.path === pathname);
   const ref = React.useRef<HTMLInputElement>(null);
 
   const sessionId = trpc.getSessionId.useQuery();
@@ -66,7 +72,9 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
         // bg={useColorModeValue("white", "gray.800")}
         p={4}
         display={{ md: "none" }}
-        bg="purple.200"
+        bg="var(--chakra-colors-chakra-body-bg)"
+        zIndex={10}
+        pos="relative"
         // bg="teal.100"
       >
         {links.map((link) => (
@@ -77,7 +85,8 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
   };
 
   const MobileNavItem = ({ title, path }: LinkItem) => {
-    const currentPage = links.map((link) => link.path).indexOf(usePathname());
+    const pathname = usePathname();
+    const currentPage = links.find((link) => link.path === pathname);
 
     return (
       <Stack spacing={4}>
@@ -90,7 +99,10 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
           align={"center"}
           _hover={{
             textDecoration: "none",
-            bg: "gray.200",
+            bg: "gray.100",
+            _dark: {
+              bg: "gray.700",
+            },
           }}
           onClick={() => onClose()}
         >
@@ -105,14 +117,8 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
               position: "absolute",
               display: "block",
               margin: "0 auto",
-              w:
-                currentPage !== -1 && links[currentPage].path === path
-                  ? "full"
-                  : 0,
-              borderBottom:
-                currentPage !== -1 && links[currentPage].path === path
-                  ? "2px"
-                  : 0,
+              w: currentPage?.path === path ? "full" : 0,
+              borderBottom: currentPage?.path === path ? "2px" : 0,
             }}
           >
             {title}
@@ -123,15 +129,7 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
   };
 
   return (
-    <Box
-      mb="60px"
-      as="header"
-      position="fixed"
-      top={0}
-      left={0}
-      w="full"
-      zIndex={10}
-    >
+    <Box as="header" position="fixed" top={0} left={0} w="full" zIndex={10}>
       <Flex
         flexDirection="row"
         justify="space-between"
@@ -165,7 +163,17 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
 
           // ml={10}
         >
-          <Link href="/">
+          <Link
+            href="/"
+            position={{ base: "absolute", md: "relative" }}
+            left={{ base: "50%", md: "auto" }}
+            top={{ base: "30", md: "auto" }}
+            transform={{
+              base: "translateX(-50%) translateY(-50%)",
+              md: "auto",
+            }}
+            transition="none"
+          >
             <Image priority src={FOX_IMG} alt="Fox Logo" boxSize="40px" />
           </Link>
           <Flex
@@ -193,33 +201,21 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
                     _hover={{
                       textDecor: "none",
                       _after: {
-                        content: "''",
-                        bottom: 1,
-                        borderBottom: "2px",
-                        w: "full",
-                        backfaceVisibility: "hidden",
-                        transition: "width 350ms ease-in-out",
-                        width: "100%",
+                        // width: "100%",
+                        transform: `scaleX(1)`,
                       },
                     }}
                     _after={{
-                      backfaceVisibility: "hidden",
                       transition: "all 280ms ease-in-out",
                       bottom: 1,
-                      content: '" "',
+                      content: '""',
                       position: "absolute",
-                      display: "block",
                       margin: "0 auto",
-                      w:
-                        currentPage !== -1 &&
-                        links[currentPage].path === link.path
-                          ? "full"
-                          : 0,
-                      borderBottom:
-                        currentPage !== -1 &&
-                        links[currentPage].path === link.path
-                          ? "2px"
-                          : 0,
+                      borderBottom: "2px",
+                      w: "full",
+                      transform: `scaleX(${
+                        currentPage?.path === link.path ? 1 : 0
+                      })`,
                     }}
                   >
                     {link.title}
@@ -230,29 +226,40 @@ export const Header: React.FC<{ title?: string }> = ({ title }) => {
           </Flex>
         </Flex>
         <Flex columnGap="2">
-          <Button onClick={() => toggleColorMode()} w="50">
-            {colorMode === "dark" ? <SunIcon /> : <MoonIcon />}
-          </Button>
+          <Tooltip
+            label={`Switch to ${
+              colorMode === "dark" ? "Light Mode" : "Dark Mode"
+            }`}
+          >
+            <Button onClick={() => toggleColorMode()} w="50" variant="ghost">
+              {colorMode === "dark" ? <SunIcon /> : <MoonIcon />}
+            </Button>
+          </Tooltip>
 
           <Tooltip label={`Session id: ${sessionId.data}`}>
-            {/* <AspectRatio maxW="400px" ratio={4 / 3}>
-
-            </AspectRatio> */}
-            <Box>
-              <Image
-                src={ICON_IMG}
-                alt="default user icon"
-                w="40px"
-                // h="40px"
-                // boxSize="40px"
-                // objectFit="cover"
-              />
-            </Box>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                alert(
+                  `Your session id is ${sessionId.data}. It was generated when you first visited this site.`
+                );
+              }}
+            >
+              <InfoIcon />
+            </Button>
           </Tooltip>
         </Flex>
       </Flex>
       <Collapse in={isOpen} animateOpacity ref={ref}>
         <MobileNav />
+        <Box
+          position="fixed"
+          inset="0"
+          top="60px"
+          bg="rgba(0, 0, 0, 0.85)"
+          zIndex="1"
+          onClick={() => onClose()}
+        />
       </Collapse>
     </Box>
   );

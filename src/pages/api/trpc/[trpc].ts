@@ -10,7 +10,7 @@ const sessionCookie = "task_app_session";
 
 export default trpcNext.createNextApiHandler({
   router: appRouter,
-  createContext: ({ req, res }) => {
+  createContext: async ({ req, res }) => {
     // Parse browser cookies, check for task_app_session
     const sessionToken = cookie.parse(req.headers.cookie ?? "")[sessionCookie];
     // Assume no user
@@ -30,6 +30,9 @@ export default trpcNext.createNextApiHandler({
 
     if (userId === undefined) {
       userId = crypto.randomBytes(16).toString("hex");
+      // Initialize db
+      // await create sample tasks
+      // await create sample rewards
     }
 
     const newSessionToken = jwt.sign({ userId }, process.env.JWT_SECRET!);

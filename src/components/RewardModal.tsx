@@ -15,9 +15,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useMemo, useState } from "react";
-import Particles from "react-tsparticles";
-import { loadFull } from "tsparticles";
-import { particleOptions } from "./particleOptions";
+import { confetti } from "tsparticles-confetti";
 
 export const RewardModal: React.FC<{
   selectedRewardTier: number;
@@ -56,40 +54,43 @@ export const RewardModal: React.FC<{
     return null;
   }
 
-  const particlesInit = async (main: any) => {
-    console.log(main);
+  // const particlesInit = async (main: any) => {
+  //   console.log(main);
 
-    // you can initialize the tsParticles instance (main) here, adding custom shapes or presets
-    // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
-    // starting from v2 you can add only the features you need reducing the bundle size
-    await loadFull(main);
-  };
+  //   // you can initialize the tsParticles instance (main) here, adding custom shapes or presets
+  //   // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
+  //   // starting from v2 you can add only the features you need reducing the bundle size
+  //   await loadFull(main);
+  // };
 
-  // function shoot() {
-  //   confetti({
-  //     ...defaults,
-  //     particleCount: 30,
-  //     scalar: 1.2,
-  //     shapes: ["circle", "square"],
-  //     colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"],
-  //   });
+  function launchConfetti() {
+    const defaults = {
+      spread: 360,
+      ticks: 100,
+      gravity: 0,
+      decay: 0.94,
+      startVelocity: 30,
+    };
+    confetti({
+      ...defaults,
+      particleCount: 30,
+      scalar: 1.2,
+      shapes: ["circle", "square"],
+      colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"],
+    });
 
-  //   confetti({
-  //     ...defaults,
-  //     particleCount: 20,
-  //     scalar: 2,
-  //     shapes: ["text"],
-  //     shapeOptions: {
-  //       text: {
-  //         value: ["🦄", "🌈"],
-  //       },
-  //     },
-  //   });
-  // }
-
-  // setTimeout(shoot, 0);
-  // setTimeout(shoot, 100);
-  // setTimeout(shoot, 200);
+    confetti({
+      ...defaults,
+      particleCount: 20,
+      scalar: 2,
+      shapes: ["text"],
+      shapeOptions: {
+        text: {
+          value: ["🦄", "🌈"],
+        },
+      },
+    });
+  }
 
   return (
     <Modal isOpen={true} onClose={() => onSelection()} isCentered>
@@ -98,21 +99,6 @@ export const RewardModal: React.FC<{
         <ModalHeader></ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {/* <Particles
-            id="particles-here"
-            init={particlesInit}
-            options={{
-              spread: 360,
-              ticks: 100,
-              gravity: 0,
-              decay: 0.94,
-              startVelocity: 30,
-              particleCount: 30,
-              scalar: 1.2,
-              shapes: ["circle", "square"],
-              colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"],
-            }}
-          /> */}
           <VStack>
             <Box boxSize="md">
               <Image
@@ -149,6 +135,9 @@ export const RewardModal: React.FC<{
               await utils.currentPoints.fetch();
 
               onSelection();
+
+              // call confetti
+              launchConfetti();
             }}
             isLoading={redeemRewardMutation.isLoading}
           >

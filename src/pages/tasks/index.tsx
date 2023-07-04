@@ -11,26 +11,31 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { trpc } from "@/utils/trpc";
+import { PageLayout } from "@/components/PageLayout";
+import { TitledContainer } from "@/components/TitledContainer";
 
 const Tasks: React.FC = () => {
   const taskList = trpc.tasks.useQuery();
 
   return (
-    <Box h="full" mb="20">
+    <PageLayout buttonSpace={120}>
       <Flex
         justifyContent="center"
         alignItems="center"
         w="full"
-        maxW="6xl"
+        maxW="4xl"
         mx="auto"
         px={{ base: "4", md: "24" }}
         transition="all 250ms ease-in-out"
       >
-        <SimpleGrid spacing={4} w="full">
+        <Flex flexDir="column" rowGap="10" w="full">
           {taskList.data !== undefined &&
             taskList.data.tasks.map((pointGroup) => {
               return (
-                <React.Fragment key={pointGroup.points}>
+                <TitledContainer
+                  key={pointGroup.points}
+                  title={`${pointGroup.points} Point Tasks`}
+                >
                   {pointGroup.tasks.map((task) => {
                     return (
                       <TaskCard
@@ -41,10 +46,10 @@ const Tasks: React.FC = () => {
                       />
                     );
                   })}
-                </React.Fragment>
+                </TitledContainer>
               );
             })}
-        </SimpleGrid>
+        </Flex>
       </Flex>
       <Link href="tasks/creation">
         <Button
@@ -57,7 +62,7 @@ const Tasks: React.FC = () => {
           Add Task
         </Button>
       </Link>
-    </Box>
+    </PageLayout>
   );
 };
 

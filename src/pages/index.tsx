@@ -1,36 +1,77 @@
+import { GoalProgressBar } from "@/components/GoalProgressBar";
+import { PageLayout } from "@/components/PageLayout";
+import { RewardModal } from "@/components/RewardModal";
+import { TaskCard } from "@/components/TaskCard";
+import { TitledContainer } from "@/components/TitledContainer";
+import { taskCreationSchema } from "@/pages/tasks/creation";
+import { trpc } from "@/utils/trpc";
+import { PlusSquareIcon } from "@chakra-ui/icons";
+import { Image } from "@chakra-ui/next-js";
 import {
   Box,
-  Flex,
-  SimpleGrid,
-  Link,
   Button,
-  FormControl,
-  FormLabel,
-  Switch,
-  Stack,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-  Modal,
-  Text,
+  Divider,
+  Flex,
   Grid,
   GridItem,
-  VStack,
+  Heading,
+  Input,
+  Link,
+  Stack,
 } from "@chakra-ui/react";
-import { Image } from "@chakra-ui/next-js";
-import { TaskCard } from "@/components/TaskCard";
-import data from "./test/testData.json";
-import { useState } from "react";
-import { trpc } from "@/utils/trpc";
-import { TriangleDownIcon } from "@chakra-ui/icons";
-import { RewardModal } from "@/components/RewardModal";
+import React, { useState } from "react";
 import IMG_FOX from "../img/FOX.png";
-import React from "react";
-import { GoalProgressBar } from "@/components/GoalProgressBar";
+
+const NewTask: React.FC<{ points: number }> = ({ points }) => {
+  const addTask = trpc.addTask.useMutation();
+  const utils = trpc.useContext();
+
+  const [taskName, setTaskName] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e?: { preventDefault?: () => void }) => {
+    e?.preventDefault?.();
+    const parseResult = taskCreationSchema.safeParse({
+      name: taskName,
+      points: points.toString(),
+    });
+
+    if (!parseResult.success) return;
+
+    setLoading(true);
+    await addTask.mutateAsync(parseResult.data);
+    await utils.tasks.refetch();
+    setLoading(false);
+    setTaskName("");
+  };
+
+  return (
+    <Grid
+      as="form"
+      onSubmit={handleSubmit}
+      templateColumns="1fr min-content"
+      w="full"
+      columnGap="2"
+    >
+      <Input
+        placeholder="Write new task..."
+        w="full"
+        variant="flushed"
+        value={taskName}
+        onChange={(e) => setTaskName(e.target.value)}
+      />
+      <Button
+        variant="ghost"
+        isLoading={loading}
+        onClick={() => handleSubmit()}
+        w="40px"
+        isDisabled={taskName.trim().length === 0}
+      >
+        <PlusSquareIcon />
+      </Button>
+    </Grid>
+  );
+};
 
 export default function Home() {
   const utils = trpc.useContext();
@@ -44,22 +85,23 @@ export default function Home() {
   const pointBalance = currentPoints.data?.point_balance;
 
   return (
-    <Box h="100vh" flex={"column"}>
+    <PageLayout buttonSpace={120}>
       <Stack flex={"column"} justify={"center"} align={"center"}>
         <Flex flex="row" justify={"center"} align={"center"}>
           <Image priority src={IMG_FOX} alt="Fox" />
         </Flex>
-
+        <Heading textAlign="center" fontSize="2xl" mt="6">
+          Claim Reward
+        </Heading>
         <Flex
           justifyContent="center"
           alignItems="center"
           direction="column"
           w="full"
-          maxW="6xl"
+          maxW="4xl"
           mx="auto"
           px={{ base: "4", md: "24" }}
           transition="all 250ms ease-in-out"
-          rowGap="14"
         >
           {pointBalance !== undefined && (
             <Flex direction="column" w="full">
@@ -67,73 +109,39 @@ export default function Home() {
 
               <Grid
                 templateColumns="repeat(6, 1fr)"
-                templateRows="repeat(3, 1fr)"
+                templateRows="repeat(1, 1fr)"
                 w="full"
-                h="180"
+                mt="2"
               >
                 <GridItem
-                  colSpan={6}
-                  w="full"
-                  rowStart={1}
-                  position="relative"
-                  pb="2"
+                  rowStart={3}
+                  colSpan={2}
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
                 >
-                  <Flex
-                    transform="translateX(-50%)"
-                    position="absolute"
-                    flexDirection="column"
+                  <Grid
+                    w="full"
+                    templateColumns="1fr 60px 1fr"
+                    justifyContent="center"
                     alignItems="center"
-                    transition="left 250ms ease-in-out"
-                    left={
-                      (Math.min(pointBalance / 60, 1) * 100).toString() + "%"
-                    }
                   >
-                    <Text>{pointBalance}</Text>
-                    <TriangleDownIcon boxSize={6} />
-                  </Flex>
-                </GridItem>
-
-                <GridItem
-                  bg="purple.200"
-                  filter={pointBalance >= 10 ? "saturate(1)" : "saturate(20%)"}
-                  colSpan={1}
-                  w="full"
-                  rowStart={2}
-                ></GridItem>
-                <GridItem
-                  bg="purple.400"
-                  filter={pointBalance >= 30 ? "saturate(1)" : "saturate(20%)"}
-                  colSpan={2}
-                  rowStart={2}
-                ></GridItem>
-                <GridItem
-                  bg="purple.800"
-                  filter={pointBalance >= 60 ? "saturate(1)" : "saturate(20%)"}
-                  colSpan={3}
-                  rowStart={2}
-                ></GridItem>
-                {/* <GridItem rowStart={3} colStart={1}>
-                  TEST
-                </GridItem> */}
-                <GridItem
-                  rowStart={3}
-                  colSpan={2}
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Button
-                    wordBreak="break-word"
-                    onClick={() => {
-                      setSelectedRewardTier(10);
-                    }}
-                    onMouseEnter={() => {
-                      utils.availableRewards.prefetch();
-                    }}
-                    isDisabled={pointBalance < 10}
-                  >
-                    -10
-                  </Button>
+                    <Box></Box>
+                    <Button
+                      wordBreak="break-word"
+                      onClick={() => {
+                        setSelectedRewardTier(10);
+                      }}
+                      onMouseEnter={() => {
+                        utils.availableRewards.prefetch();
+                      }}
+                      border={pointBalance < 10 ? "none" : "2px"}
+                      borderColor="purple.200"
+                      isDisabled={pointBalance < 10}
+                    >
+                      -10
+                    </Button>
+                  </Grid>
                 </GridItem>
                 <GridItem
                   rowStart={3}
@@ -143,6 +151,7 @@ export default function Home() {
                   alignItems="center"
                 >
                   <Button
+                    w="60px"
                     wordBreak="break-word"
                     onClick={() => {
                       setSelectedRewardTier(30);
@@ -151,6 +160,8 @@ export default function Home() {
                       utils.availableRewards.prefetch();
                     }}
                     isDisabled={pointBalance < 30}
+                    border={pointBalance < 30 ? "none" : "2px"}
+                    borderColor="purple.400"
                   >
                     -30
                   </Button>
@@ -163,8 +174,8 @@ export default function Home() {
                   alignItems="center"
                 >
                   <Button
+                    w="60px"
                     wordBreak="break-word"
-                    transform="translateX(50%)"
                     onClick={() => {
                       setSelectedRewardTier(60);
                     }}
@@ -172,6 +183,8 @@ export default function Home() {
                       utils.availableRewards.prefetch();
                     }}
                     isDisabled={pointBalance < 60}
+                    border={pointBalance < 60 ? "none" : "2px"}
+                    borderColor="purple.800"
                   >
                     -60
                   </Button>
@@ -179,11 +192,31 @@ export default function Home() {
               </Grid>
             </Flex>
           )}
-          <SimpleGrid spacing={4} w="full">
+          <Divider my="8" />
+          <Flex flexDir="row" columnGap="10">
+            <Heading
+              textAlign="center"
+              fontSize="2xl"
+              mb="6"
+              borderColor="purple.500"
+              // borderBottom
+            >
+              Tasks
+            </Heading>
+            <Heading textAlign="center" fontSize="2xl" mb="6">
+              Rewards
+            </Heading>
+          </Flex>
+
+          <Flex flexDir="column" rowGap="10" w="full" maxW="6xl">
             {taskList.data !== undefined &&
               taskList.data.tasks.map((pointGroup) => {
                 return (
-                  <React.Fragment key={pointGroup.points}>
+                  <TitledContainer
+                    key={pointGroup.points}
+                    title={`${pointGroup.points} Point Tasks`}
+                    bottomElement={<NewTask points={pointGroup.points} />}
+                  >
                     {pointGroup.tasks.map((task) => {
                       return (
                         <TaskCard
@@ -194,16 +227,10 @@ export default function Home() {
                         />
                       );
                     })}
-                  </React.Fragment>
+                  </TitledContainer>
                 );
               })}
-
-            {/* <TaskCard
-            task={`HHHHHHHHDASHDKJHASKJDHLKJAJSKDJKLSJDKLJSALKDJLKSJDKLJSLSADKJDLKAJWLKDJLKWAJDLKJAWLKDJLKWJA
-              SLKDJKLAJDLKJWfsddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddLAKJDKLJLKSAJLKDJSKLWHDNJKAWNFKLDNFKSNAs`}
-            checkbox={true}
-          /> */}
-          </SimpleGrid>
+          </Flex>
         </Flex>
         {selectedRewardTier !== null && (
           <RewardModal
@@ -224,6 +251,6 @@ export default function Home() {
           </Button>
         </Link>
       </Stack>
-    </Box>
+    </PageLayout>
   );
 }

@@ -3615,6 +3615,33 @@ tslib@^2.0.0, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.4.0, tslib@^2.5.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.5.3.tgz#24944ba2d990940e6e982c4bea147aba80209913"
   integrity sha512-mSxlJJwl3BMEQCUNnxXBU9jP4JBktcEGhURcPR6VQVlnP0FdDEsIaz0C35dXNGLyRfrATNofF0F5p2KPxQgB+w==
 
+tsparticles-confetti@^2.10.1:
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/tsparticles-confetti/-/tsparticles-confetti-2.10.1.tgz#c6dad984dc303ae10e54729a9b2e4379c2a1c5c0"
+  integrity sha512-p8OeLa5dcaTPnCvnGkVQEFXkRWKh3QsaV5Ha3YqUYjYtGKPglLACfmPUUzVfaKyrjhSJES0mGoQQQr81Kzo+KQ==
+  dependencies:
+    tsparticles-engine "^2.10.1"
+    tsparticles-move-base "^2.10.1"
+    tsparticles-plugin-emitters "^2.10.1"
+    tsparticles-plugin-motion "^2.10.1"
+    tsparticles-shape-cards "^2.10.1"
+    tsparticles-shape-circle "^2.10.1"
+    tsparticles-shape-heart "^2.10.1"
+    tsparticles-shape-image "^2.10.1"
+    tsparticles-shape-polygon "^2.10.1"
+    tsparticles-shape-square "^2.10.1"
+    tsparticles-shape-star "^2.10.1"
+    tsparticles-shape-text "^2.10.1"
+    tsparticles-updater-color "^2.10.1"
+    tsparticles-updater-life "^2.10.1"
+    tsparticles-updater-opacity "^2.10.1"
+    tsparticles-updater-out-modes "^2.10.1"
+    tsparticles-updater-roll "^2.10.1"
+    tsparticles-updater-rotate "^2.10.1"
+    tsparticles-updater-size "^2.10.1"
+    tsparticles-updater-tilt "^2.10.1"
+    tsparticles-updater-wobble "^2.10.1"
+
 tsparticles-engine@^2.10.1:
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/tsparticles-engine/-/tsparticles-engine-2.10.1.tgz#43097da18ea6b4123f12115fcbd5243d45e85fd7"
@@ -3760,10 +3787,31 @@ tsparticles-plugin-emitters@^2.10.1:
   dependencies:
     tsparticles-engine "^2.10.1"
 
+tsparticles-plugin-motion@^2.10.1:
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/tsparticles-plugin-motion/-/tsparticles-plugin-motion-2.10.1.tgz#474ec142642b8d361ff9fe1f4cbb12f501605631"
+  integrity sha512-73rQM2gYls26dDU9iq1LTakwWrfbkTYn/xXCP7QG4pnOyDk6pU4+bSNhi6DmF1zRdCdZJXoEHTt3KH5kOPNHxw==
+  dependencies:
+    tsparticles-engine "^2.10.1"
+
+tsparticles-shape-cards@^2.10.1:
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/tsparticles-shape-cards/-/tsparticles-shape-cards-2.10.1.tgz#248856260196b8cede61d5ac47d6e5006cca313a"
+  integrity sha512-edhPASGF/y2b9K3mplPfwGP/2C2wj/dQ5qq+0mXkNz2/6Edi/NMYpfufOkxFlr3Jun1r+iHpGJiePAySFuOGuw==
+  dependencies:
+    tsparticles-engine "^2.10.1"
+
 tsparticles-shape-circle@^2.10.1:
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/tsparticles-shape-circle/-/tsparticles-shape-circle-2.10.1.tgz#bea5da274d35b857acb3ab3c779fb2ff3d8d2368"
   integrity sha512-oWfoF1rwBNDS8X8EBZVwt/UF9wBqh3OpV71LxCvTE9lh73FeUeQZ9aSW46t9XODIsNBMPbnAQNkP1wz4zNiw2A==
+  dependencies:
+    tsparticles-engine "^2.10.1"
+
+tsparticles-shape-heart@^2.10.1:
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/tsparticles-shape-heart/-/tsparticles-shape-heart-2.10.1.tgz#8a0a0470fb86933e79bca706282e34e0e144adc4"
+  integrity sha512-US7x7hFFO34SQ+L4lUxk6P2prfZrDQ+Ag+yr/Q/Udp7sIsD6/4GjWzErknpcnIFyiXIM3nThLddN4Pb7tOmNqg==
   dependencies:
     tsparticles-engine "^2.10.1"
 
