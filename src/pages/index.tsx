@@ -107,7 +107,9 @@ const NewTask: React.FC<{ points: number; type: "task" | "reward" }> = ({
       columnGap="2"
     >
       <Input
-        placeholder="Write new task..."
+        placeholder={
+          type === "task" ? "Write new task..." : "Write new reward..."
+        }
         w="full"
         variant="flushed"
         value={itemName}
@@ -258,6 +260,10 @@ to {transform: rotate(360deg)}
                   alignItems="center"
                 >
                   <Button
+                    bg="orange.50"
+                    _dark={{
+                      bg: "gray.800",
+                    }}
                     w="60px"
                     wordBreak="break-word"
                     onClick={() => {
@@ -305,6 +311,10 @@ to {transform: rotate(360deg)}
                   alignItems="center"
                 >
                   <Button
+                    bg="orange.50"
+                    _dark={{
+                      bg: "gray.800",
+                    }}
                     w="60px"
                     wordBreak="break-word"
                     onClick={() => {
@@ -350,6 +360,10 @@ to {transform: rotate(360deg)}
                   alignItems="center"
                 >
                   <Button
+                    bg="orange.50"
+                    _dark={{
+                      bg: "gray.800",
+                    }}
                     w="60px"
                     wordBreak="break-word"
                     onClick={() => {
@@ -415,7 +429,7 @@ to {transform: rotate(360deg)}
             <Flex flexDir="row" cursor="pointer">
               <Heading
                 textAlign="center"
-                fontSize={{ base: "md", md: "2xl" }}
+                fontSize={{ base: "md", md: "xl" }}
                 w="128px"
                 // bg="blue"
                 p="4"
@@ -428,7 +442,7 @@ to {transform: rotate(360deg)}
               </Heading>
               <Heading
                 textAlign="center"
-                fontSize={{ base: "md", md: "2xl" }}
+                fontSize={{ base: "md", md: "xl" }}
                 w="128px"
                 // bg="purple"
                 p="4"
