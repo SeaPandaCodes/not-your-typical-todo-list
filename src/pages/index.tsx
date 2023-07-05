@@ -114,12 +114,6 @@ const NewTask: React.FC<{ points: number; type: "task" | "reward" }> = ({
         onChange={(e) => setItemName(e.target.value)}
       />
       <Button
-        // _light={{
-        //   colorScheme: "orange",
-        //   bg: "orange.50",
-        // }}
-        // bg="gray.800"
-        // colorScheme="gray.800"
         variant="ghost"
         isLoading={loading}
         onClick={() => handleSubmit()}
@@ -229,6 +223,8 @@ to {transform: rotate(360deg)}
             width={340}
             height={340}
             alt="Fish Logo"
+            w={{ base: "240px", md: "340px" }}
+            h={{ base: "240px", md: "340px" }}
           />
         </Flex>
         <Heading textAlign="center" fontSize="2xl" mt="6">
@@ -401,7 +397,7 @@ to {transform: rotate(360deg)}
             position="relative"
             borderRadius="8"
             overflow="hidden"
-            zIndex="10"
+            zIndex="5"
             _light={{
               bg: "orange.50",
             }}
