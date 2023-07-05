@@ -99,7 +99,7 @@ export const RewardModal: React.FC<{
   to {transform: rotate(720deg)}
 `;
 
-  const spinAnimation = `${spin} 1s linear`;
+  const spinAnimation = `${spin} 1s cubic-bezier(.39,.9,.34,1.01)`;
 
   return (
     <Modal isOpen={true} onClose={() => onSelection()} isCentered>
