@@ -230,6 +230,8 @@ to {transform: rotate(360deg)}
                         rewardList.data.find((x) => x.points === 10) ===
                           undefined
                       ) {
+                        setSelectedList("reward");
+
                         toast({
                           title: "No 10 Point Rewards",
                           description: "Please create a reward to redeem",
@@ -238,7 +240,13 @@ to {transform: rotate(360deg)}
                           position: "bottom",
                           isClosable: true,
                         });
-                        document.getElementById("reward-10")?.scrollIntoView();
+
+                        setTimeout(() => {
+                          document.getElementById("reward-10")?.scrollIntoView({
+                            behavior: "smooth",
+                            block: "center",
+                          });
+                        }, 440);
                       } else {
                         setSelectedRewardTier(10);
                       }
@@ -269,6 +277,13 @@ to {transform: rotate(360deg)}
                         rewardList.data.find((x) => x.points === 30) ===
                           undefined
                       ) {
+                        setSelectedList("reward");
+                        setTimeout(() => {
+                          document.getElementById("reward-30")?.scrollIntoView({
+                            behavior: "smooth",
+                            block: "center",
+                          });
+                        }, 440);
                         toast({
                           title: "No 30 Point Rewards",
                           description: "Please create a reward to redeem",
@@ -277,7 +292,6 @@ to {transform: rotate(360deg)}
                           position: "bottom",
                           isClosable: true,
                         });
-                        document.getElementById("reward-30")?.scrollIntoView();
                       } else {
                         setSelectedRewardTier(30);
                       }
@@ -308,6 +322,13 @@ to {transform: rotate(360deg)}
                         rewardList.data.find((x) => x.points === 60) ===
                           undefined
                       ) {
+                        setSelectedList("reward");
+                        setTimeout(() => {
+                          document.getElementById("reward-60")?.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                          });
+                        }, 440);
                         toast({
                           title: "No 60 Point Rewards",
                           description: "Please create a reward to redeem",
@@ -316,7 +337,6 @@ to {transform: rotate(360deg)}
                           position: "bottom",
                           isClosable: true,
                         });
-                        document.getElementById("reward-60")?.scrollIntoView();
                       } else {
                         setSelectedRewardTier(60);
                       }
@@ -335,7 +355,7 @@ to {transform: rotate(360deg)}
             </Flex>
           )}
           <Divider my="8" />
-          <Box borderWidth="2px" mb="6" position="relative">
+          <Box borderWidth="2px" mb="6" position="relative" borderRadius="8">
             <Box
               position="absolute"
               w="50%"
@@ -345,7 +365,7 @@ to {transform: rotate(360deg)}
               transition="all 320ms ease-in-out"
               zIndex="-1"
             />
-            <Flex flexDir="row">
+            <Flex flexDir="row" cursor="pointer">
               <Heading
                 textAlign="center"
                 fontSize="2xl"

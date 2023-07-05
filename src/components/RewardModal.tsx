@@ -34,7 +34,7 @@ export const RewardModal: React.FC<{
     if (fishSpin === true) {
       setTimeout(() => {
         setFishSpin(false);
-      }, 2050);
+      }, 1020);
     }
   }, [fishSpin]);
 
@@ -96,10 +96,10 @@ export const RewardModal: React.FC<{
 
   const spin = keyframes`
   from {transform: rotate(0deg);}
-  to {transform: rotate(1080deg)}
+  to {transform: rotate(720deg)}
 `;
 
-  const spinAnimation = `${spin} 2s linear`;
+  const spinAnimation = `${spin} 1s linear`;
 
   return (
     <Modal isOpen={true} onClose={() => onSelection()} isCentered>

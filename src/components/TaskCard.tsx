@@ -33,8 +33,8 @@ export const TaskCard: React.FC<{
       }
       alignItems="center"
       overflow={"hidden"}
-      // transform={taskCompleted === true ? "scale(0)" : "scale(1)"}
-      transform={taskCompleted === true ? "translateX(300%)" : "translateX(0%)"}
+      transform={taskCompleted === true ? "scale(0)" : "scale(1)"}
+      // transform={taskCompleted === true ? "translateX(300%)" : "translateX(0%)"}
       // zIndex={taskCompleted === true ? "-2" : 0}
       transition="all 0.8s ease-in-out"
       // opacity={taskCompleted === false ? "1" : "0.26"}
@@ -61,7 +61,7 @@ export const TaskCard: React.FC<{
       </Text>
       <IconButton
         // variant="outline"
-        colorScheme="teal"
+        colorScheme={type === "task" ? "purple" : "teal"}
         aria-label="Send email"
         variant="ghost"
         icon={<DeleteIcon />}
