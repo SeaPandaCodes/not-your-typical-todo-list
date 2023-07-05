@@ -44,7 +44,7 @@ export async function createSampleTasks(userId: string) {
     },
   ];
 
-  pool.query(
+  await pool.query(
     `
   INSERT INTO tasks (id, user_id, name, completed_at, points)
   SELECT
@@ -101,7 +101,7 @@ export async function createSampleRewards(userId: string) {
     },
   ];
 
-  pool.query(
+  await pool.query(
     `
   INSERT INTO rewards (id, user_id, name, max_redemptions, points, deleted)
   SELECT
