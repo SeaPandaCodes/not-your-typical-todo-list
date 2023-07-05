@@ -1,58 +1,18 @@
 import { trpc } from "@/utils/trpc";
-import {
-  CloseIcon,
-  HamburgerIcon,
-  InfoIcon,
-  MoonIcon,
-  SunIcon,
-} from "@chakra-ui/icons";
-import { Image, Link } from "@chakra-ui/next-js";
+import { InfoIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { Image } from "@chakra-ui/next-js";
 import {
   Box,
   Button,
-  Collapse,
   Flex,
-  IconButton,
-  Stack,
-  Text,
+  Heading,
   Tooltip,
   useColorMode,
   useDisclosure,
-  useOutsideClick,
-  Heading,
 } from "@chakra-ui/react";
 import { usePathname } from "next/navigation";
 import React from "react";
-import FOX_IMG from "../img/FOX.png";
 import IMG_LOGO from "../img/FishLogo.svg";
-
-// interface LinkItem {
-//   path: string;
-//   title: string;
-// }
-
-// const links: Array<LinkItem> = [
-//   {
-//     path: "/",
-//     title: "Home",
-//   },
-//   {
-//     path: "/tasks",
-//     title: "Tasks",
-//   },
-//   {
-//     path: "/tasks/creation",
-//     title: "Create Task",
-//   },
-//   {
-//     path: "/rewards",
-//     title: "Rewards",
-//   },
-//   {
-//     path: "/rewards/creation",
-//     title: "Create Reward",
-//   },
-// ];
 
 export const Header: React.FC<{ title?: string }> = ({ title }) => {
   const { colorMode, toggleColorMode } = useColorMode();

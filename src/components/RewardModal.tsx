@@ -21,12 +21,22 @@ import { confetti } from "tsparticles-confetti";
 import { FaDice } from "react-icons/fa";
 import IMG_LOGO from "../img/FishLogo.svg";
 import { Image } from "@chakra-ui/next-js";
+import { redirect } from "next/navigation";
 
 export const RewardModal: React.FC<{
   selectedRewardTier: number;
   onSelection: () => void;
 }> = ({ selectedRewardTier, onSelection }) => {
   const [discarded, setDiscarded] = useState<Set<string>>(new Set());
+  const [fishSpin, setFishSpin] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (fishSpin === true) {
+      setTimeout(() => {
+        setFishSpin(false);
+      }, 2050);
+    }
+  }, [fishSpin]);
 
   const utils = trpc.useContext();
   const rewardTiers = trpc.availableRewards.useQuery();
@@ -41,8 +51,7 @@ export const RewardModal: React.FC<{
     )?.rewards;
 
     if (rewards === undefined) {
-      // TO DO!!!
-      throw new Error("To Do: Show state for no remaining rewards");
+      redirect("/");
     }
 
     const availableRewards = rewards.filter(({ id }) => !discarded.has(id));
@@ -91,18 +100,6 @@ export const RewardModal: React.FC<{
 `;
 
   const spinAnimation = `${spin} 2s linear`;
-
-  const [fishSpin, setFishSpin] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (fishSpin === true) {
-      setTimeout(() => {
-        setFishSpin(false);
-      }, 2050);
-    }
-  }, [fishSpin]);
-
-  console.log(fishSpin);
 
   return (
     <Modal isOpen={true} onClose={() => onSelection()} isCentered>
@@ -182,7 +179,6 @@ export const RewardModal: React.FC<{
           >
             Redeem
           </Button>
-          {/* <Button variant="ghost">Secondary Action</Button> */}
         </ModalFooter>
       </ModalContent>
     </Modal>

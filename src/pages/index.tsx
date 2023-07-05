@@ -3,7 +3,6 @@ import { PageLayout } from "@/components/PageLayout";
 import { RewardModal } from "@/components/RewardModal";
 import { TaskCard } from "@/components/TaskCard";
 import { TitledContainer } from "@/components/TitledContainer";
-import { taskCreationSchema } from "@/pages/tasks/creation";
 import { trpc } from "@/utils/trpc";
 import { PlusSquareIcon } from "@chakra-ui/icons";
 import { Image } from "@chakra-ui/next-js";
@@ -16,18 +15,45 @@ import {
   GridItem,
   Heading,
   Input,
-  Link,
   Stack,
   keyframes,
   useColorMode,
   useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import IMG_FOX from "../img/FOX.png";
 import IMG_LOGO from "../img/FishLogo.svg";
-import IMG_WAVES from "../img/LayeredWaves.svg";
-import { rewardCreationSchema } from "./rewards/creation";
 import { TutorialModal } from "@/components/TutorialModal";
+import * as z from "zod";
+
+const taskCreationSchema = z.strictObject({
+  name: z.string().trim().min(1, { message: "Required" }),
+  points: z
+    .string()
+    .transform((s) => parseInt(s))
+    .refine((s) => !Number.isNaN(s), { message: "Required" })
+    .pipe(z.number().positive().max(100).min(10, { message: "Required" })),
+});
+
+const rewardCreationSchema = z.strictObject({
+  name: z.string().min(1, { message: "Required" }),
+  points: z
+    .string()
+    .transform((s) => (s !== null ? parseInt(s) : s))
+    .refine((s) => !Number.isNaN(s), { message: "Required" })
+    .pipe(z.number().positive().max(100).min(10, { message: "Required" })),
+  maxRedemptions: z
+    .string()
+    .nullable()
+    .transform((s) => parseInt(s as string) || null)
+    .pipe(
+      z
+        .number()
+        .positive()
+        .max(10000)
+        .min(1, { message: "Required" })
+        .nullable()
+    ),
+});
 
 const NewTask: React.FC<{ points: number; type: "task" | "reward" }> = ({
   points,
