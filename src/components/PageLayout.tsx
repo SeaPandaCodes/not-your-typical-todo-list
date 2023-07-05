@@ -11,7 +11,7 @@ export const PageLayout: React.FC<
   return (
     <Box minH="100vh">
       <Header />
-      <Flex as="main" direction="column" pt="96px" pos="relative">
+      <Flex as="main" direction="column" pt="96px" pos="relative" pb="200px">
         {children}
       </Flex>
       <Wave />

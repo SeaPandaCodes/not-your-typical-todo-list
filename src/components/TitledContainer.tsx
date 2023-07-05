@@ -12,7 +12,7 @@ export const TitledContainer: React.FC<{
     <Flex
       mt="18px"
       id={id}
-      mb={title.includes("60") ? "180px" : "0px"}
+      // mb={title.includes("60") ? "180px" : "0px"}
       flexDir="column"
       rowGap={{ base: "2", md: "4" }}
       border="4px"

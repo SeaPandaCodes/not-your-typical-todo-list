@@ -20,7 +20,7 @@ import {
   useColorMode,
   useToast,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import IMG_LOGO from "../img/FishLogo.svg";
 import { TutorialModal } from "@/components/TutorialModal";
 import * as z from "zod";
@@ -163,8 +163,48 @@ export default function Home() {
 from {transform: rotate(180deg);}
 to {transform: rotate(360deg)}
 `;
-  const spinAnimation = `${spin} 1.25s linear`;
-  const spinBackAnimation = `${spinBack} 1.25s linear`;
+  const spinAnimation = `${spin} 1.25s cubic-bezier(1,-0.7, 0.5, 1.01)`;
+  const spinBackAnimation = `${spinBack} 1.25s cubic-bezier(1,-0.7, 0.5, 1.01)`;
+
+  const columnsContainerRef = useRef<HTMLDivElement>(null);
+  const taskContainerRef = useRef<HTMLDivElement>(null);
+  const rewardContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const columnsContainer = columnsContainerRef.current;
+    const taskContainer = taskContainerRef.current;
+    const rewardContainer = rewardContainerRef.current;
+
+    if (
+      columnsContainer === null ||
+      taskContainer === null ||
+      rewardContainer === null
+    ) {
+      return;
+    }
+
+    const activeContainer =
+      selectedList === "task" ? taskContainer : rewardContainer;
+
+    const { height: startingHeight } = activeContainer.getBoundingClientRect();
+    columnsContainer.style.height = startingHeight + "px";
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === activeContainer) {
+          const { height } = activeContainer.getBoundingClientRect();
+          columnsContainer.style.height = height + "px";
+        }
+      }
+    });
+
+    resizeObserver.observe(activeContainer);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [selectedList]);
+
   return (
     <PageLayout buttonSpace={120}>
       <TutorialModal />
@@ -355,7 +395,18 @@ to {transform: rotate(360deg)}
             </Flex>
           )}
           <Divider my="8" />
-          <Box borderWidth="2px" mb="6" position="relative" borderRadius="8">
+          <Box
+            borderWidth="2px"
+            mb="6"
+            position="relative"
+            borderRadius="8"
+            overflow="hidden"
+            zIndex="10"
+            _light={{
+              bg: "orange.50",
+            }}
+            bg="gray.800"
+          >
             <Box
               position="absolute"
               w="50%"
@@ -368,7 +419,7 @@ to {transform: rotate(360deg)}
             <Flex flexDir="row" cursor="pointer">
               <Heading
                 textAlign="center"
-                fontSize="2xl"
+                fontSize={{ base: "md", md: "2xl" }}
                 w="128px"
                 // bg="blue"
                 p="4"
@@ -381,7 +432,7 @@ to {transform: rotate(360deg)}
               </Heading>
               <Heading
                 textAlign="center"
-                fontSize="2xl"
+                fontSize={{ base: "md", md: "2xl" }}
                 w="128px"
                 // bg="purple"
                 p="4"
@@ -392,20 +443,21 @@ to {transform: rotate(360deg)}
               </Heading>
             </Flex>
           </Box>
-          <Box position="relative" w="full">
+          <Box position="relative" w="full" ref={columnsContainerRef}>
             <Flex
               position="absolute"
               flexDir="column"
               rowGap="10"
               w="full"
               maxW="6xl"
-              h={selectedList !== "task" ? "100vh" : "auto"}
+              // h={selectedList !== "task" ? "100vh" : "auto"}
               overflow={selectedList !== "task" ? "hidden" : "visible"}
               transform={
                 selectedList !== "task" ? "translateX(-120vw)" : "auto"
               }
               transition="all 400ms ease-in-out"
               mt="5px"
+              ref={taskContainerRef}
             >
               {taskList.data !== undefined &&
                 pointTiers.map((pointGroup) => {
@@ -442,11 +494,12 @@ to {transform: rotate(360deg)}
               w="full"
               maxW="6xl"
               overflow={selectedList !== "reward" ? "hidden" : "visible"}
-              h={selectedList !== "reward" ? "100vh" : "auto"}
+              // h={selectedList !== "reward" ? "100vh" : "auto"}
               transform={
                 selectedList !== "reward" ? "translateX(120vw) " : "auto"
               }
               transition="all 400ms ease-in-out"
+              ref={rewardContainerRef}
             >
               {rewardList.data !== undefined &&
                 pointTiers.map((pointGroup) => {
