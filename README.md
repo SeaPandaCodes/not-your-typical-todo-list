@@ -1,38 +1,86 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🐳 Not Your Typical To-Do List
 
-## Getting Started
+### Upgrade your to-do list to become a reward-based system!
 
-First, run the development server:
+Organize your tasks by difficulty and score higher points for completing more complex tasks.
+Create a list of rewards that match your task difficulty.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+Completing tasks will build up your reward points.
+Redeem these points for a 10, 30, or 60 point reward.
+
+The reward will be randomly selected from your list. But feel free to re-roll if you want something different.
+
+Not happy with any of your reward choices just close the popup and switch to the reward tab to add some more.
+Your points will not be spent unless you click the redeem button.
+
+(This page is fully responsive so check it out on your tablet or mobile device!)
+
+Built With:
+
+- TypeScript
+- React
+- Next.js
+- Chakra UI
+- tRPC
+- JWT Tokens
+- PostgreSQL
+- HTML Canvas
+
+This project was deployed with Railway 🚂
+
+Extra Fun:
+You can hover over the waves at the bottom to see them pick up speed! 🌊
+Toggle the color mode to see the fish switch positions 🐟
+
+## Running This Project
+
+### Setting up the PostgreSQL Database
+
+You will need to have docker running on your device to use docker-compose.
+(If you already have a server running feel free to create the postgreSQL database on there)
+
+First update the .env.sample file with a username, password, and a random string for the JWT_SECRET. Then rename the file to .env
+
+Make sure docker is open and running then run `docker-compose up`
+
+With your preferred database tool connect to the postgreSQL server.
+The connection credentials are located in the .env file.
+
+Once connected run the following to create the necessary tables:
+
+```sql
+CREATE TABLE IF NOT EXISTS tasks (
+	id character varying(32) NOT NULL,
+	user_id character varying(32) NOT NULL,
+	name character varying(512) NOT NULL,
+	max_redemptions integer,
+	points integer NOT NULL,
+	deleted boolean NOT NULL,
+	CONSTRAINT rewards_pk PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS rewards (
+	id character varying(32) NOT NULL,
+	user_id character varying(32) NOT NULL,
+	name character varying(512) NOT NULL,
+	completed_at timestamp,
+	points integer NOT NULL,
+	CONSTRAINT tasks_pk PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS redemptions (
+	id character varying(32) NOT NULL,
+	user_id character varying(32) NOT NULL,
+	reward_id character varying(32) NOT NULL,
+	redeemed_at timestamp NOT NULL,
+	CONSTRAINT redemptions_pk PRIMARY KEY (id)
+);
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Running the Page
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+While docker-compose up is running, open a new terminal.
+Run `yarn` to download the packages.
+Run `yarn dev` to start
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The page will be running on `localhost:3000`
