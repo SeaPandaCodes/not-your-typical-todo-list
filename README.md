@@ -15,7 +15,7 @@ Your points will not be spent unless you click the redeem button.
 
 (This page is fully responsive so check it out on your tablet or mobile device!)
 
-Built With:
+### Built With:
 
 - TypeScript
 - React
@@ -28,7 +28,8 @@ Built With:
 
 This project was deployed with Railway 🚂
 
-Extra Fun:\
+### Extra Fun:
+
 You can hover over the waves at the bottom to see them pick up speed! 🌊\
 Toggle the color mode to see the fish switch positions 🐟
 
